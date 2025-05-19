@@ -43,23 +43,52 @@ class ControladorEcoBarreira:
         codigo_ecobarreira = self.__tela_ecobarreira.busca_ecobarreira()
         ecobarreira = self.buscar_ecobarreira_por_codigo(codigo_ecobarreira)
 
-    def excluir_ecobarreira(self, codigo: int):
-        ecobarreira = self.buscar_ecobarreira_por_codigo(codigo)
-        if ecobarreira in self.__ecobarreiras:
-            self.__ecobarreiras.remove(ecobarreira)
-            return ecobarreira
+        if ecobarreira is not None:
+            novos_dados_ecobarreira = self.__tela_ecobarreira.pega_dados_ecobarreira()
+            ecobarreira.codigo = novos_dados_ecobarreira["codigo"]
+            ecobarreira.cidade = novos_dados_ecobarreira["cidade"]
+            ecobarreira.cep = novos_dados_ecobarreira["cep"]
+            ecobarreira.rua = novos_dados_ecobarreira["rua"]
+            ecobarreira.complemento = novos_dados_ecobarreira["complemento"]
+            ecobarreira.estado = novos_dados_ecobarreira["estado"]
+            self.listar_ecobarreiras()
+            self.__tela_ecobarreira.mostra_mensagem("Barreira alterada com sucesso!")
+
         else:
-            return None
+            self.__tela_ecobarreira.mostra_mensagem("Atenção! essa ecobarreira não existe!")
+
+    def excluir_ecobarreira(self, codigo: int):
+        self.listar_ecobarreiras()
+        codigo = self.__tela_ecobarreira.busca_ecobarreira()
+        ecobarreira = self.buscar_ecobarreira_por_codigo(codigo)
+
+        if ecobarreira is not None:
+            self.__ecobarreiras.remove(ecobarreira)
+            self.listar_ecobarreiras
+            self.__tela_ecobarreira.mostra_mensagem("Ecobarreira excluida com sucesso!")
+
+        else:
+            self.__tela_ecobarreira.mostra_mensagem("Atenção! Essa Ecobarreira não existe")
 
     def listar_ecobarreiras(self):
-        if not self.__ecobarreiras:
-            return None
-        else:
-            for ecobarreira in self.__ecobarreiras:
-                print(f"Código: {ecobarreira.codigo}, \
-                    Cidade: {ecobarreira.cidade}, \
-                    Cep: {ecobarreira.cep}, \
-                    Rua: {ecobarreira.rua}, \
-                    Complemento: {ecobarreira.complemento}, \
-                    Estado: {ecobarreira.estado}, \
-                    Sensores: {ecobarreira.sensores}")
+        for ecobarreira in self.__ecobarreiras:
+            self.__tela_ecobarreira.mostra_mensagem({"Código": ecobarreira.codigo, 
+                                                    "Cidade": ecobarreira.cidade,
+                                                    "Cep": ecobarreira.cep,
+                                                    "Rua": ecobarreira.rua, 
+                                                    "Complemento": ecobarreira.complemento, 
+                                                    "Estado": ecobarreira.estado, 
+                                                    "Sensores": ecobarreira.sensores
+                                                    })
+            
+    def retomar(self):
+        self.__controlador_sistema.abre_tela()
+
+    def abre_tela(self):
+        lista_opcoes = {1: self.cadastrar_ecobarreira, 2: self.buscar_ecobarreira_por_codigo,
+                        3: self.altera_ecobarreira, 4: self.excluir_ecobarreira,
+                        5: self.listar_ecobarreiras}
+        
+        continua = True
+        while continua:
+            lista_opcoes[self.__tela_ecobarreira.tela_opcoes()]()
