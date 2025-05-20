@@ -1,75 +1,86 @@
 from model.coleta import Coleta
 from model.colaborador import Colaborador
 from model.ecobarreira import EcoBarreira
+from view.tela_coleta import TelaColeta
 from datetime import datetime
 
 
 class ControladorColeta:
-    def __init__(self):
+    def __init__(self, controlador_sistema):
         self.__coletas = []
+        self.__controlador_sistema = controlador_sistema
+        self.__tela_coleta = TelaColeta()
 
-    @property
-    def coletas(self) -> list:
-        return self.__coletas
+    def cadastrar_coleta(self):
+        dados_coleta = self.__tela_coleta.pega_dados_coleta()
+        nova_coleta = Coleta(dados_coleta["id"],
+                             dados_coleta["data"],
+                             dados_coleta["ecobarreira"],
+                             dados_coleta["colaborador"]
+                             )
+        for coleta in self.__coletas:
+            if coleta.id == nova_coleta.id:
+                self.__tela_coleta.mostra_mensagem(
+                    "Atenção! Essa coleta já existe")
+                return
+        self.__coletas.append(nova_coleta)
+        self.__tela_coleta.mostra_mensagem("Coleta criada com sucesso!")
+        return
 
-    def cadastrar_coleta(self, id: int, data: datetime, ecobarreira: EcoBarreira, colaborador: Colaborador, lixos: list) -> Coleta:
+    def buscar_coleta_por_id(self, id: int):
         for coleta in self.__coletas:
             if coleta.id == id:
+                self.__tela_coleta.mostra_mensagem("Coleta encontrada!")
                 return coleta
-        if isinstance(id, int) and isinstance(data, datetime) and\
-                isinstance(ecobarreira, EcoBarreira) and isinstance(colaborador, Colaborador) \
-                and isinstance(lixos, list):
-            nova_coleta = Coleta(id, data, ecobarreira, colaborador, lixos)
-            self.__coletas.append(nova_coleta)
-            return nova_coleta
-
-    def buscar_coleta_por_id(self, id_coleta: int):
-        for coleta in self.__coletas:
-            if coleta.id == id_coleta:
-                return coleta
+        self.__tela_coleta.mostra_mensagem("Coleta não encontrada!")
         return None
 
-    def altera_coleta(self, id_coleta=int,
-                      nova_data: datetime = None,
-                      nova_ecobarreira: EcoBarreira = None,
-                      novo_colaborador: Colaborador = None,
-                      novos_lixos: list = None
-                      ):
-
+    def altera_coleta(self):
+        self.listar_coletas()
+        id_coleta = self.__tela_coleta.buscar_coleta()
         coleta = self.buscar_coleta_por_id(id_coleta)
 
-        if coleta is None:
-            return None
-
-        if nova_data:
-            if isinstance(nova_data, datetime):
-                coleta.data = nova_data
-
-        if nova_ecobarreira:
-            if isinstance(nova_ecobarreira, EcoBarreira):
-                coleta.ecobarreira = nova_ecobarreira
-
-        if novo_colaborador:
-            if isinstance(novo_colaborador, Colaborador):
-                coleta.colaborador = novo_colaborador
-
+        if coleta is not None:
+            novos_dados_coleta = self.__tela_coleta.pega_dados_coleta()
+            coleta.id = novos_dados_coleta["id"]
+            coleta.data = novos_dados_coleta["data"]
+            coleta.ecobarreira = novos_dados_coleta["ecobarreira"]
+            coleta.colaborador = novos_dados_coleta["colaborador"]
+            self.listar_coletas()
+            self.__tela_coleta.mostra_mensagem("Coleta alterada com sucesso!")
         else:
-            if isinstance(novos_lixos, list):
-                coleta.lixos = novos_lixos
+            self.__tela_coleta.mostra_mensagem(
+                "Atenção! essa coleta não existe")
 
-    def excluir_coleta(self, id_coleta: int):
-        coleta = self.buscar_coleta_por_id(id_coleta)
-        if coleta in self.__coletas:
-            self.__coleta.remove(coleta)
-            return coleta
+    def excluir_coleta(self, id: int):
+        self.listar_coletas()
+        id = self.__tela_coleta.buscar_coleta()
+        coleta = self.buscar_coleta_por_id(id)
+
+        if coleta is not None:
+            self.__coletas.remove(coleta)
+            self.listar_coletas()
+            self.__tela_coleta.mostra_mensagem("Coleta excluida com sucesso!")
         else:
-            return None
+            self.__tela_coleta.mostra_mensagem(
+                "Atenção! essa coleta não existe")
 
     def listar_coletas(self):
-        if not self.__coletas:
-            return None
-        else: 
-            for coleta in self.__coletas:
-                print(f" ID: {coleta.id}, Data: {coleta.data}, "
-                f"Colaborador: {coleta.colaborador.nome}, "
-                f"Barreira: {coleta.eco_barreira.nome}")
+        for coleta in self.__coletas:
+            self.__tela_coleta.mostra_coleta({"ID": coleta.id,
+                                              "Data": coleta.data,
+                                              "Colaborador": coleta.colaborador.nome,
+                                              "Barreira": coleta.eco_barreira.nome
+                                              })
+
+    def retomar(self):
+        self.__controlador_sistema.abre_tela()
+
+    def abre_tela(self):
+        lista_opcoes = {1: self.cadastrar_coleta, 2: self.buscar_coleta_por_id,
+                        3: self.altera_coleta, 4: self.excluir_coleta,
+                        5: self.listar_coletas}
+
+    continua = True
+    while continua:
+        lista_opcoes[self.__tela_coleta.tela_opcoes()]()
