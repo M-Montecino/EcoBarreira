@@ -51,7 +51,7 @@ class ControladorSensor():
 
         if sensor is not None:
             self.__sensores.remove(sensor)
-            self.listar_sensores
+            self.listar_sensores()
             self.__tela_sensor.mostra_mensagem("Sensor excluido com sucesso!")
         else:
             self.__tela_sensor.mostra_mensagem("Atenção! Esse sensor não existe")
