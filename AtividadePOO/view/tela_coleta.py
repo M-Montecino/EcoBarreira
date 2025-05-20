@@ -26,4 +26,14 @@ class TelaColeta():
     
     def mostra_coleta(self, dados_coleta):
         print("ID: ", dados_coleta["id"])
-        print
+        print("Data: ", dados_coleta["data"])
+        print("Colaborador: ", dados_coleta["colaborador"])
+        print("Ecobarreira: ", dados_coleta["ecobarreira"])
+        print("\n")
+
+    def busca_coleta(self):
+        id = input("ID da coleta que deseja selecionar: ")
+        return id
+    
+    def mostra_mensagem(self, mensagem):
+        print(mensagem)
