@@ -17,3 +17,13 @@ class TelaColeta():
         data = input("Data (formato: DD/MM/AAAA)")
         cpf_colaborador = input("CPF do colaborador responsável: ")
         codigo_barreira = input("Código da Ecobarreira: ")
+
+        return {"id": id,
+                "data": data,
+                "cpf_colaborador": cpf_colaborador,
+                "codigo_barreira": codigo_barreira
+                }
+    
+    def mostra_coleta(self, dados_coleta):
+        print("ID: ", dados_coleta["id"])
+        print
