@@ -7,17 +7,18 @@ class TelaSensor():
         print("3 - Alterar Sensor")
         print("4 - Exclui Sensor")
         print("5 - Listar Sensores")
+        print("0 - Retomar")
 
         while True:
             try:
                 opcao = int(input("Escolha a opção:"))
-                if opcao in [1, 2, 3, 4, 5]:
+                if opcao in [0, 1, 2, 3, 4, 5]:
                     return opcao
                 else:
                     print("Opção inválida. Tente novamente.")
             except ValueError:
                 print("Por favor, digite um número válido.")
-    
+
     def pega_dados_sensor(self):
         print(" ======= Dados do Sensor ======== ")
         while True:
@@ -31,16 +32,16 @@ class TelaSensor():
         while not tipo:
             print("Tipo não pode estar vazio!")
             tipo = input("Tipo do sensor: ").strip()
-        
+
         while True:
             ativo_input = input("Está ativo? (True/False): ").strip().lower()
-            if ativo_input in ["true","false"]:
+            if ativo_input in ["true", "false"]:
                 ativo = ativo_input == "true"
                 break
             print("Valor inválido, digite 'True' ou 'False'.")
 
         return {"codigo": codigo, "tipo": tipo, "ativo": ativo}
-    
+
     def mostra_sensor(self, dados_sensor):
         print("Código: ", {dados_sensor["codigo"]})
         print("Tipo: ", {dados_sensor["tipo"]})
