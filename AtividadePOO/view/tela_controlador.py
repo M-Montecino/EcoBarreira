@@ -7,5 +7,13 @@ class TelaControlador:
         print("3 --- Coleta")
         print("4 --- Sensor")
         print("0 --- Finalizar Sistema")
-        opcao = int(input("Escolha sua opção:"))
-        return opcao
+
+        while True:
+            try:
+                opcao = int(input("Escolha a opção: "))
+                if opcao in [0, 1, 2, 3, 4]:
+                    return opcao
+                else:
+                    print("Opção inválida. Tente novamente.")
+            except ValueError:
+                print("Por favor, digite um valor válido.")
