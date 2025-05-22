@@ -10,22 +10,28 @@ class ControladorSensor():
 
     def cadastrar_sensor(self):
         dados_sensor = self.__tela_sensor.pega_dados_sensor()
-        novo_sensor = Sensor(dados_sensor["codigo"],
-                        dados_sensor["tipo"],
-                        dados_sensor["ativo"]
-                        )
+        novo_sensor = Sensor(
+            dados_sensor["codigo"],
+            dados_sensor["tipo"],
+            dados_sensor["ativo"]
+        )
+
         for sensor in self.__sensores:
             if sensor.codigo == novo_sensor.codigo:
-                self.__tela_sensor.mostra_mensagem("Atenção! Esse sensor já existe")
+                self.__tela_sensor.mostra_mensagem(
+                    "Atenção! Esse sensor já existe")
                 return
+
         self.__sensores.append(novo_sensor)
         self.__tela_sensor.mostra_mensagem("Sensor criado com sucesso!")
         return
 
-    def buscar_sensor_por_codigo(self, codigo:int):
+    def buscar_sensor_por_codigo(self, codigo: int):
         for sensor in self.__sensores:
             if sensor.codigo == codigo:
+                self.__tela_sensor.mostra_mensagem("Sensor encontrado")
                 return sensor
+        self.__tela_sensor.mostra_mensagem("Sensor não encontrado")
         return None
 
     def altera_sensor(self):
@@ -41,10 +47,10 @@ class ControladorSensor():
             self.listar_sensores()
             self.__tela_sensor.mostra_mensagem("Sensor alterado com sucesso!")
         else:
-            self.__tela_sensor.mostra_mensagem("Atenção! Esse sensor não existe")
+            self.__tela_sensor.mostra_mensagem(
+                "Atenção! Esse sensor não existe")
 
-
-    def excluir_sensor(self, codigo:int):
+    def excluir_sensor(self, codigo: int):
         self.listar_sensores()
         codigo = self.__tela_sensor.busca_sensor()
         sensor = self.buscar_sensor_por_codigo(codigo)
@@ -54,21 +60,29 @@ class ControladorSensor():
             self.listar_sensores()
             self.__tela_sensor.mostra_mensagem("Sensor excluido com sucesso!")
         else:
-            self.__tela_sensor.mostra_mensagem("Atenção! Esse sensor não existe")
-    
+            self.__tela_sensor.mostra_mensagem(
+                "Atenção! Esse sensor não existe")
+
     def listar_sensores(self):
         for sensor in self.__sensores:
-            self.__tela_sensor.mostra_sensor({"Código": sensor.codigo,
-                                              "Tipo": sensor.tipo,
-                                              "Ativo": sensor.ativo})
-    
+            self.__tela_sensor.mostra_sensor({
+                "Código": sensor.codigo,
+                "Tipo": sensor.tipo,
+                "Ativo": sensor.ativo
+            })
+
     def retomar(self):
         self.__controlador_sistema.abre_tela()
-    
+
     def abre_tela(self):
-        lista_opcoes = {1: self.cadastrar_sensor, 2: self.buscar_sensor_por_codigo,
-                        3: self.altera_sensor, 4: self.excluir_sensor,
-                        5: self.listar_sensores}
+        lista_opcoes = {
+            1: self.cadastrar_sensor,
+            2: self.buscar_sensor_por_codigo,
+            3: self.altera_sensor,
+            4: self.excluir_sensor,
+            5: self.listar_sensores,
+            0: self.retomar
+        }
 
         continua = True
         while continua:
