@@ -7,33 +7,56 @@ class TelaColeta():
         print("3 - Alterar dados da Coleta")
         print("4 - Excluir Coleta")
         print("5 - Listar todas as Coletas")
+        print("0 - Retomar")
 
-        opcao = int(input("Escolha sua opção: "))
-        return opcao
+        while True:
+            try:
+                opcao = int(input("Escolha a sua opção: "))
+                if opcao in [0, 1, 2, 3, 4, 5]:
+                    return opcao
+                print("Opção inválida.")
+            except ValueError:
+                print("Digite um número válido.")
 
     def pega_dados_coleta(self):
         print(" ====== Dadods da Coleta ====== ")
-        id_coleta = input("ID: ")
-        data = input("Data (formato: DD/MM/AAAA)")
-        cpf_colaborador = input("CPF do colaborador responsável: ")
-        codigo_barreira = input("Código da Ecobarreira: ")
+        while True:
+            id_coleta = input("ID: ").strip()
+            if id_coleta.isdigit() and int(id_coleta) > 0:
+                id_coleta = int(id_coleta)
+                break
+            print("ID inválido.")
 
-        return {"id": id,
+        data = input("Data: ").strip()
+        while not data:
+            print("Data não pode estar vazia!")
+            data = input("Data: ").strip()
+
+        cpf_colaborador = input("CPF do colaborador: ").strip()
+        cpf_colaborador = ''.join(filter(str.isdigit, cpf_colaborador))
+
+        codigo_barreira = input("Código da ecobarreira: ").strip()
+        codigo_barreira = ''.join(filter(str.isdigit, codigo_barreira))
+
+        return {"id": id_coleta,
                 "data": data,
                 "cpf_colaborador": cpf_colaborador,
                 "codigo_barreira": codigo_barreira
                 }
-    
+
     def mostra_coleta(self, dados_coleta):
         print("ID: ", dados_coleta["id"])
         print("Data: ", dados_coleta["data"])
         print("Colaborador: ", dados_coleta["colaborador"])
         print("Ecobarreira: ", dados_coleta["ecobarreira"])
-        print("\n")
+        print("--------------\n")
 
     def busca_coleta(self):
-        id = input("ID da coleta que deseja selecionar: ")
-        return id
-    
+        while True:
+            id_str = input("ID da coleta: ").strip()
+            if id_str.isdigit():
+                return int(id_str)
+            print("ID inválido. Use apenas números.")
+
     def mostra_mensagem(self, mensagem):
         print(mensagem)
