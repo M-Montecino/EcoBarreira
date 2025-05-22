@@ -10,14 +10,14 @@ class ControladorControladores:
     @property
     def controlador_sensor(self):
         return self.__controlador_sensor
-    
+
     @property
     def tela_controlador(self):
         return self.__tela_controlador
-    
+
     def inicializa_sistema(self):
         self.abre_tela()
-    
+
     def cadastra_sensor(self):
         self.__controlador_sensor.abre_tela()
 
@@ -25,9 +25,9 @@ class ControladorControladores:
         exit(0)
 
     def abre_tela(self):
-        lista_opcoes = {4: self.cadastra_sensor, \
+        lista_opcoes = {4: self.cadastra_sensor,
                         0: self.encerra_sistema}
-    
+
         while True:
             opcao_escolhida = self.__tela_controlador.tela_opcoes()
             funcao_escolhida = lista_opcoes[opcao_escolhida]
