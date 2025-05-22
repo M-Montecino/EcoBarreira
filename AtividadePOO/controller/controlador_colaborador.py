@@ -11,20 +11,22 @@ class ControladorColaborador:
 
     def cadastrar_colaboradores(self):
         dados_colaborador = self.__tela_colaborador.pega_dados_colaborador()
-        novo_colaborador = Colaborador(dados_colaborador["cpf"],
-                                       dados_colaborador["nome"],
-                                       dados_colaborador["cidade"],
-                                       dados_colaborador["cep"],
-                                       dados_colaborador["rua"],
-                                       dados_colaborador["complemento"],
-                                       dados_colaborador["estado"]
-                                       )
+        novo_colaborador = Colaborador(
+            dados_colaborador["cpf"],
+            dados_colaborador["nome"],
+            dados_colaborador["cidade"],
+            dados_colaborador["cep"],
+            dados_colaborador["rua"],
+            dados_colaborador["complemento"],
+            dados_colaborador["estado"]
+        )
 
         for colaborador in self.__colaboradores:
             if colaborador.cpf == novo_colaborador.cpf:
                 self.__tela_colaborador.mostra_mensagem(
                     "Esse colaborador já existe!")
                 return
+
         self.__colaboradores.append(novo_colaborador)
         self.__tela_colaborador.mostra_mensagem(
             "Colaborador adicionado com sucesso!")
@@ -76,22 +78,28 @@ class ControladorColaborador:
 
     def listar_colaboradores(self):
         for colaborador in self.__colaboradores:
-            self.__tela_colaborador.mostra_colaborador({"Cpf": colaborador.cpf,
-                                                        "Nome": colaborador.nome,
-                                                        "Cidade": colaborador.cidade,
-                                                        "Cep": colaborador.cep,
-                                                        "Rua": colaborador.rua,
-                                                        "Complemento": colaborador.complemento,
-                                                        "Estado": colaborador.estado
-                                                        })
+            self.__tela_colaborador.mostra_colaborador({
+                "Cpf": colaborador.cpf,
+                "Nome": colaborador.nome,
+                "Cidade": colaborador.cidade,
+                "Cep": colaborador.cep,
+                "Rua": colaborador.rua,
+                "Complemento": colaborador.complemento,
+                "Estado": colaborador.estado
+            })
 
     def retomar(self):
         self.__controlador_sistema.abre_tela()
 
     def abre_tela(self):
-        lista_opcoes = {1: self.cadastrar_colaboradores, 2: self.buscar_colaborador_por_cpf,
-                        3: self.altera_colaborador, 4: self.excluir_colaborador,
-                        5: self.listar_colaboradores}
+        lista_opcoes = {
+            1: self.cadastrar_colaboradores,
+            2: self.buscar_colaborador_por_cpf,
+            3: self.altera_colaborador,
+            4: self.excluir_colaborador,
+            5: self.listar_colaboradores,
+            0: self.retomar
+        }
 
         continua = True
         while continua:
