@@ -1,125 +1,91 @@
-from model.coleta import Coleta
-from controller.controlador_colaborador import ControladorColaborador
-from controller.controlador_ecobarreira import ControladorEcoBarreira
-from view.tela_coleta import TelaColeta
-from datetime import datetime
+from model.colaborador import Colaborador
+from model.endereco import Endereco
+from view.tela_colaborador import TelaColaborador
 
 
-class ControladorColeta:
-    def __init__(self, controlador_sistema,
-                 controlador_colaborador,
-                 controlador_ecobarreira):
-        self.__coletas = []
+class ControladorColaborador:
+    def __init__(self, controlador_sistema):
+        self.__colaboradores = []
         self.__controlador_sistema = controlador_sistema
-        self.__controlador_colaborador = controlador_colaborador
-        self.__controlador_ecobarreira = controlador_ecobarreira
-        self.__tela_coleta = TelaColeta()
+        self.__tela_colaborador = TelaColaborador()
 
-    def buscar_colaborador_por_cpf(self, cpf):
-        for colaborador in self.__controlador_colaborador.colaboradores:
-            if colaborador.cpf == cpf:
-                return colaborador
-        return None
-
-    def buscar_barreira_por_codigo(self, codigo):
-        for barreira in self.__controlador_ecobarreira.barreiras:
-            if barreira.codigo == codigo:
-                return barreira
-        return None
-
-    def cadastrar_coleta(self):
-        dados_coleta = self.__tela_coleta.pega_dados_coleta()
-
-        if self.buscar_coleta_por_id(dados_coleta["id"]):
-            self.__tela_coleta.mostra_mensagem("Essa coleta já existe.")
-            return
-
-        try:
-            data = datetime.strptime(dados_coleta["data"], "%d/%m/%Y")
-        except ValueError:
-            self.__tela_coleta.mostra_mensagem(
-                "Data inválida. Use o formato DD/MM/AAAA.")
-            return
-
-        colaborador = self.buscar_colaborador_por_cpf(
-            dados_coleta["cpf_colaborador"])
-        if colaborador is None:
-            self.__tela_coleta.mostra_mensagem("Colaborador não encontrado.")
-            return
-
-        ecobarreira = self.buscar_ecobarreira_por_codigo(
-            dados_coleta["codigo_ecobarreira"])
-        if ecobarreira is None:
-            self.__tela_coleta.mostra_mensagem("Ecobarreira não encontrada.")
-            return
-
-        nova_coleta = Coleta(
-            dados_coleta["id"],
-            data,
-            ecobarreira,
-            colaborador
+    def cadastrar_colaboradores(self):
+        dados_colaborador = self.__tela_colaborador.pega_dados_colaborador()
+        novo_colaborador = Colaborador(
+            dados_colaborador["cpf"],
+            dados_colaborador["nome"],
+            dados_colaborador["cidade"],
+            dados_colaborador["cep"],
+            dados_colaborador["rua"],
+            dados_colaborador["complemento"],
+            dados_colaborador["estado"]
         )
 
-        self.__coletas.append(nova_coleta)
-        self.__tela_coleta.mostra_mensagem("Coleta registrada com sucesso!")
+        for colaborador in self.__colaboradores:
+            if colaborador.cpf == novo_colaborador.cpf:
+                self.__tela_colaborador.mostra_mensagem(
+                    "Esse colaborador já existe!")
+                return
 
-    def buscar_coleta_por_id(self, id: int):
-        for coleta in self.__coletas:
-            if coleta.id == id:
-                self.__tela_coleta.mostra_mensagem("Coleta encontrada!")
-                return coleta
-        self.__tela_coleta.mostra_mensagem("Coleta não encontrada!")
+        self.__colaboradores.append(novo_colaborador)
+        self.__tela_colaborador.mostra_mensagem(
+            "Colaborador adicionado com sucesso!")
+        return
+
+    def buscar_colaborador_por_cpf(self, cpf: int):
+        for colaborador in self.__colaboradores:
+            if colaborador.cpf == cpf:
+                self.__tela_colaborador.mostra_mensagem(
+                    "Colaborador encontrado!")
+                return colaborador
+        self.__tela_colaborador.mostra_mensagem("Colaborador não encontrado!")
         return None
 
-    def altera_coleta(self):
-        self.listar_coletas()
-        id_coleta = self.__tela_coleta.buscar_coleta()
-        coleta = self.buscar_coleta_por_id(id_coleta)
+    def altera_colaborador(self):
+        self.listar_colaboradores()
+        cpf_colaborador = self.__tela_colaborador.busca_colaborador()
+        colaborador = self.buscar_colaborador_por_cpf(cpf_colaborador)
 
-        if coleta:
-            dados_coleta = self.__tela_coleta.pega_dados_coleta()
-
-            colaborador = self.buscar_colaborador_por_cpf(
-                dados_coleta["cpf_colaborador"])
-            if not colaborador:
-                self.__tela_coleta.mostra_mensagem(
-                    "Colaborador não encontrado.")
-                return
-
-            ecobarreira = self.buscar_ecobarreira_por_codigo(
-                dados_coleta["codigo_ecobarreira"])
-            if not ecobarreira:
-                self.__tela_coleta.mostra_mensagem(
-                    "Ecobarreira não encontrada.")
-                return
-
-            coleta.id = dados_coleta["id"]
-            coleta.data = dados_coleta["data"]
-            coleta.ecobarreira = ecobarreira
-            self.__tela_coleta.mostra_mensagem("Coleta alterada com sucesso!")
+        if colaborador is not None:
+            novos_dados_colaborador = self.__tela_colaborador.pega_dados_colaborador()
+            colaborador.cpf = novos_dados_colaborador["cpf"]
+            colaborador.nome = novos_dados_colaborador["nome"]
+            colaborador.cidade = novos_dados_colaborador["cidade"]
+            colaborador.cep = novos_dados_colaborador["cep"]
+            colaborador.rua = novos_dados_colaborador["rua"]
+            colaborador.complemento = novos_dados_colaborador["complemento"]
+            colaborador.estado = novos_dados_colaborador["estado"]
+            self.listar_colaboradores()
+            self.__tela_colaborador.mostra_mensagem(
+                "Colaborador alterado com sucesso!")
         else:
-            self.__tela_coleta.mostra_mensagem("Coleta não encontrada.")
+            self.__tela_colaborador.mostra_mensagem(
+                "Colaborador não encontrado")
 
-    def excluir_coleta(self, id: int):
-        self.listar_coletas()
-        id = self.__tela_coleta.buscar_coleta()
-        coleta = self.buscar_coleta_por_id(id)
+    def excluir_colaborador(self, cpf: int):
+        self.listar_colaboradores()
+        cpf = self.__tela_colaborador.busca_colaborador()
+        colaborador = self.buscar_colaborador_por_cpf(cpf)
 
-        if coleta is not None:
-            self.__coletas.remove(coleta)
-            self.listar_coletas()
-            self.__tela_coleta.mostra_mensagem("Coleta excluida com sucesso!")
+        if colaborador is not None:
+            self.__colaboradores.remove(colaborador)
+            self.listar_colaboradores
+            self.__tela_colaborador.mostra_mensagem(
+                "Colaborador excluido com sucesso!")
         else:
-            self.__tela_coleta.mostra_mensagem(
-                "Atenção! essa coleta não existe")
+            self.__tela_colaborador.mostra_mensagem(
+                "Colaborador não encontrado")
 
-    def listar_coletas(self):
-        for coleta in self.__coletas:
-            self.__tela_coleta.mostra_coleta({
-                "ID": coleta.id,
-                "Data": coleta.data,
-                "Colaborador": coleta.colaborador.nome,
-                "Barreira": coleta.eco_barreira.nome
+    def listar_colaboradores(self):
+        for colaborador in self.__colaboradores:
+            self.__tela_colaborador.mostra_colaborador({
+                "Cpf": colaborador.cpf,
+                "Nome": colaborador.nome,
+                "Cidade": colaborador.cidade,
+                "Cep": colaborador.cep,
+                "Rua": colaborador.rua,
+                "Complemento": colaborador.complemento,
+                "Estado": colaborador.estado
             })
 
     def retomar(self):
@@ -127,14 +93,23 @@ class ControladorColeta:
 
     def abre_tela(self):
         lista_opcoes = {
-            1: self.cadastrar_coleta,
-            2: self.buscar_coleta_por_id,
-            3: self.altera_coleta,
-            4: self.excluir_coleta,
-            5: self.listar_coleta,
+            1: self.cadastrar_colaboradores,
+            2: self.buscar_colaborador_por_cpf,
+            3: self.altera_colaborador,
+            4: self.excluir_colaborador,
+            5: self.listar_colaboradores,
             0: self.retomar
         }
 
-        continua = True
-        while continua:
-            lista_opcoes[self.__tela_coleta.tela_opcoes()]()
+        while True:
+            try:
+                opcao_escolhida = self.__tela_colaborador.tela_opcoes()
+                funcao_escolhida = lista_opcoes.get(opcao_escolhida)
+                if funcao_escolhida:
+                    funcao_escolhida()
+                else:
+                    self.__tela_colaborador.mostra_mensagem(
+                        "Opção inválida. Tente novamente.")
+            except Exception as e:
+                self.__tela_colaborador.mostra_mensagem(
+                    f"Comando inesperado: {str(e)}")
