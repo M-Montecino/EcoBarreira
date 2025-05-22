@@ -7,11 +7,12 @@ class TelaEcoBarreira():
         print("3 - Alterar informações da EcoBarreira")
         print("4 - Excluir EcoBarreira")
         print("5 - Listar Ecobarreiras")
+        print("0 - Retomar")
 
         while True:
             try:
                 opcao = int(input("Escolha sua opção: "))
-                if opcao in [1, 2, 3, 4, 5]:
+                if opcao in [0, 1, 2, 3, 4, 5]:
                     return opcao
                 else:
                     print("Opção inválida. Tente novamente.")
