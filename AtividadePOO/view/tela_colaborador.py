@@ -7,11 +7,12 @@ class TelaColaborador():
         print("3 - Alterar  Informações do Colaborador")
         print("4 - Excluir Colaborador")
         print("5 - Listar Colaboradores")
+        print("0 - Retomar")
 
         while True:
             try:
                 opcao = int(input("Escolha a opção: "))
-                if opcao in [1, 2, 3, 4, 5]:
+                if opcao in [0, 1, 2, 3, 4, 5]:
                     return opcao
                 else:
                     print("Opção inválida. Tente novamente.")
