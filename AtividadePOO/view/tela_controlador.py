@@ -17,3 +17,6 @@ class TelaControlador:
                     print("Opção inválida. Tente novamente.")
             except ValueError:
                 print("Por favor, digite um valor válido.")
+
+    def mostra_mensagem(self, mensagem):
+        print(mensagem)
