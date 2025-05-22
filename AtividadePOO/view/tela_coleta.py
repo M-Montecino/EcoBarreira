@@ -60,3 +60,4 @@ class TelaColeta():
 
     def mostra_mensagem(self, mensagem):
         print(mensagem)
+
