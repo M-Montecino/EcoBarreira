@@ -1,15 +1,10 @@
 class Endereco:
     def __init__(self, cidade: str, cep: str, rua: str, complemento: str, estado: str):
-        if isinstance(cidade, str):
-            self.__cidade = cidade
-        if isinstance(cep, str):
-            self.__cep = cep
-        if isinstance(rua, str):
-            self.__rua = rua
-        if isinstance(complemento, str):
-            self.__complemento = complemento
-        if isinstance(estado, str):
-            self.__estado = estado
+        self.__cidade = cidade
+        self.__cep = cep
+        self.__rua = rua
+        self.__complemento = complemento
+        self.__estado = estado
 
     @property
     def cidade(self) -> str:
