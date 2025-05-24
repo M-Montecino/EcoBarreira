@@ -1,31 +1,14 @@
 from model.coleta import Coleta
-from controller.controlador_colaborador import ControladorColaborador
-from controller.controlador_ecobarreira import ControladorEcoBarreira
 from view.tela_coleta import TelaColeta
+from model.lixo import *
 from datetime import datetime
 
 
 class ControladorColeta:
-    def __init__(self, controlador_sistema,
-                 controlador_colaborador,
-                 controlador_ecobarreira):
+    def __init__(self, controlador_sistema):
         self.__coletas = []
         self.__controlador_sistema = controlador_sistema
-        self.__controlador_colaborador = controlador_colaborador
-        self.__controlador_ecobarreira = controlador_ecobarreira
         self.__tela_coleta = TelaColeta()
-
-    def buscar_colaborador_por_cpf(self, cpf):
-        for colaborador in self.__controlador_colaborador.colaboradores:
-            if colaborador.cpf == cpf:
-                return colaborador
-        return None
-
-    def buscar_barreira_por_codigo(self, codigo):
-        for barreira in self.__controlador_ecobarreira.barreiras:
-            if barreira.codigo == codigo:
-                return barreira
-        return None
 
     def cadastrar_coleta(self):
         dados_coleta = self.__tela_coleta.pega_dados_coleta()
@@ -41,14 +24,14 @@ class ControladorColeta:
                 "Data inválida. Use o formato DD/MM/AAAA.")
             return
 
-        colaborador = self.buscar_colaborador_por_cpf(
-            dados_coleta["cpf_colaborador"])
+        colaborador = self.__controlador_sistema.controlador_colaborador.\
+            buscar_colaborador_por_cpf(dados_coleta["cpf_colaborador"])
         if colaborador is None:
             self.__tela_coleta.mostra_mensagem("Colaborador não encontrado.")
             return
 
-        ecobarreira = self.buscar_ecobarreira_por_codigo(
-            dados_coleta["codigo_ecobarreira"])
+        ecobarreira = self.__controlador_sistema.controlador_ecobarreira.\
+            buscar_ecobarreira_por_codigo(dados_coleta["codigo_ecobarreira"])
         if ecobarreira is None:
             self.__tela_coleta.mostra_mensagem("Ecobarreira não encontrada.")
             return
@@ -121,6 +104,14 @@ class ControladorColeta:
                 "Colaborador": coleta.colaborador.nome,
                 "Barreira": coleta.eco_barreira.nome
             })
+
+    def adicionar_lixo(self):
+        self.listar_coletas()
+        dados = self.__tela_coleta.pega_dados_lixo()
+        quantidade = dados["quantidade"]
+        pseudo_tipo = dados["tipo_lixo"].lower
+
+        if pseudo_tipo == "plastico" or "plástico":
 
     def retomar(self):
         self.__controlador_sistema.abre_tela()
