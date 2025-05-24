@@ -1,4 +1,4 @@
-from endereco import Endereco
+from model.endereco import Endereco
 
 
 class Colaborador:
