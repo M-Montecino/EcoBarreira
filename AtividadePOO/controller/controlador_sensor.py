@@ -84,6 +84,15 @@ class ControladorSensor():
             0: self.retomar
         }
 
-        continua = True
-        while continua:
-            lista_opcoes[self.__tela_sensor.tela_opcoes()]()
+        while True:
+            try:
+                opcao_escolhida = self.__tela_sensor.tela_opcoes()
+                funcao_escolhida = lista_opcoes.get(opcao_escolhida)
+                if funcao_escolhida:
+                    funcao_escolhida()
+                else:
+                    self.__tela_sensor.mostra_mensagem(
+                        "Opção inválida. Tente novamente.")
+            except Exception as e:
+                self.__tela_sensor.mostra_mensagem(
+                    f"Comando inesperado: {str(e)}")
