@@ -7,12 +7,15 @@ class TelaColeta():
         print("3 - Alterar dados da Coleta")
         print("4 - Excluir Coleta")
         print("5 - Listar todas as Coletas")
+        print("6 - Adicionar Lixo")
+        print("7 - Remover Lixo")
+        print("8 - Checar Lixos")
         print("0 - Retomar")
 
         while True:
             try:
                 opcao = int(input("Escolha a sua opção: "))
-                if opcao in [0, 1, 2, 3, 4, 5]:
+                if opcao in [0, 1, 2, 3, 4, 5, 6, 7, 8]:
                     return opcao
                 print("Opção inválida.")
             except ValueError:
@@ -44,6 +47,16 @@ class TelaColeta():
                 "codigo_barreira": codigo_barreira
                 }
 
+    def pega_dados_lixo(self):
+        tipo_lixo = input("Digite o tipo de lixo: ").strip()
+        while True:
+            quantidade = input("Digite a quantidade: ")
+            if quantidade.isdigit and float(quantidade) > 0:
+                return {"tipo_lixo": tipo_lixo,
+                        "quantidade": quantidade}
+            else:
+                print("Quantidade inválida!")
+
     def mostra_coleta(self, dados_coleta):
         print("ID: ", dados_coleta["id"])
         print("Data: ", dados_coleta["data"])
@@ -60,4 +73,3 @@ class TelaColeta():
 
     def mostra_mensagem(self, mensagem):
         print(mensagem)
-
