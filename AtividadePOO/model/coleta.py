@@ -11,7 +11,7 @@ class Coleta:
         self.__data = data
         self.__ecobarreira = ecobarreira
         self.__colaborador = colaborador
-        self.__lixos: Dict[Type[Lixo], List[Lixo]] = {}
+        self.__lixos = []
 
     @property
     def data(self) -> datetime:
