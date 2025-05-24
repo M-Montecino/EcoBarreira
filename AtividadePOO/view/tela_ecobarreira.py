@@ -7,12 +7,15 @@ class TelaEcoBarreira():
         print("3 - Alterar informações da EcoBarreira")
         print("4 - Excluir EcoBarreira")
         print("5 - Listar Ecobarreiras")
+        print("6 - Adicionar Sensor na EcoBarreira")
+        print("7 - Remover Sensor na EcoBarreira")
+        print("8 - Checar Sensores na Ecobarreira")
         print("0 - Retomar")
 
         while True:
             try:
                 opcao = int(input("Escolha sua opção: "))
-                if opcao in [0, 1, 2, 3, 4, 5]:
+                if opcao in [0, 1, 2, 3, 4, 5, 6, 7, 8]:
                     return opcao
                 else:
                     print("Opção inválida. Tente novamente.")
@@ -60,6 +63,14 @@ class TelaEcoBarreira():
                 "complemento": complemento,
                 "estado": estado
                 }
+
+    def pega_codigo_sensor():
+        while True:
+            codigo_sensor = input("Digite o código do sensor: ")
+            if codigo_sensor.isdigit():
+                return codigo_sensor
+            else:
+                print("Digite um código válido!")
 
     def mostra_ecobarreira(self, dados_ecobarreira):
         print("Código: ", dados_ecobarreira["codigo"])
