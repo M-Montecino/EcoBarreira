@@ -1,8 +1,8 @@
-from endereco import Endereco
-from sensor import Sensor
+from model.endereco import Endereco
+from model.sensor import Sensor
 
 
-class EcoBarreira:
+class EcoBarreira():
     def __init__(self, codigo: int, cidade: str, cep: str, rua: str, complemento: str, estado: str):
         self.__codigo = codigo
         self.endereco = Endereco(cidade, cep, rua, complemento, estado)
