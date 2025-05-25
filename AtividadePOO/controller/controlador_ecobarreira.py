@@ -1,9 +1,12 @@
 from model.ecobarreira import EcoBarreira
 from view.tela_ecobarreira import TelaEcoBarreira
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from controller.controlador_controladores import ControladorControladores
 
 
 class ControladorEcoBarreira:
-    def __init__(self, controlador_sistema):
+    def __init__(self, controlador_sistema: ControladorControladores):
         self.__ecobarreiras = []
         self.__controlador_sistema = controlador_sistema
         self.__tela_ecobarreira = TelaEcoBarreira()
