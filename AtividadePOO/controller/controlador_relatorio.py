@@ -6,7 +6,7 @@ if TYPE_CHECKING:
 
 
 class ControladorRelatorio:
-    def __init__(self, controlador_sistema: ControladorControladores):
+    def __init__(self, controlador_sistema: "ControladorControladores"):
         self.__controlador_sistema = controlador_sistema
         self.__tela_relatorio = TelaRelatorio()
 
