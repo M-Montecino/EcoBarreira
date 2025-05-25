@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Dict, List, Type
 from model.ecobarreira import EcoBarreira
 from model.colaborador import Colaborador
 from model.lixo import Lixo
@@ -39,9 +38,3 @@ class Coleta:
     def colaborador(self, colaborador: Colaborador):
         if isinstance(colaborador, Colaborador):
             self.__colaborador = colaborador
-
-    def adicionar_lixo(self, lixo: Lixo):
-        tipo = type(lixo)
-        if tipo not in self.__lixos:
-            self.__lixos[tipo] = []
-        self.__lixos[tipo].append(lixo)
