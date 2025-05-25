@@ -6,7 +6,7 @@ class EcoBarreira(Endereco):
     def __init__(self, codigo: int, cidade: str, cep: str, rua: str, complemento: str, estado: str):
         super().__init__(cidade, cep, rua, complemento, estado)
         self.__codigo = codigo
-        self.endereco = Endereco()
+        self.endereco = Endereco(cidade, cep, rua, complemento, estado)
         self.__sensores = []
 
     @property
