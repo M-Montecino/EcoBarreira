@@ -1,9 +1,12 @@
 from model.sensor import Sensor
 from view.tela_sensor import TelaSensor
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from controller.controlador_controladores import ControladorControladores
 
 
 class ControladorSensor():
-    def __init__(self, controlador_sistema):
+    def __init__(self, controlador_sistema: ControladorControladores):
         self.__sensores = []
         self.__controlador_sistema = controlador_sistema
         self.__tela_sensor = TelaSensor()
