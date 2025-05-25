@@ -2,10 +2,13 @@ from model.coleta import Coleta
 from view.tela_coleta import TelaColeta
 from model.lixo import *
 from datetime import datetime
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from controller.controlador_controladores import ControladorControladores
 
 
 class ControladorColeta:
-    def __init__(self, controlador_sistema):
+    def __init__(self, controlador_sistema: ControladorControladores):
         self.__coletas = []
         self.__controlador_sistema = controlador_sistema
         self.__tela_coleta = TelaColeta()
@@ -106,12 +109,85 @@ class ControladorColeta:
             })
 
     def adicionar_lixo(self):
-        self.listar_coletas()
-        dados = self.__tela_coleta.pega_dados_lixo()
-        quantidade = dados["quantidade"]
-        pseudo_tipo = dados["tipo_lixo"].lower
+        dados_lixo = self.__tela_coleta.pega_dados_lixo()
 
-        if pseudo_tipo == "plastico" or "plástico":
+        codigo_coleta = dados_lixo["codigo_coleta"]
+        tipo = dados_lixo["tipo"]
+        quantidade = dados_lixo["quantidade"]
+
+        coleta = self.buscar_coleta_por_codigo(codigo_coleta)
+        if coleta is None:
+            self.__tela_coleta.mostra_mensagem("Coleta não encontrada!")
+            return
+
+        if tipo.lower() == ("plastico", "plástico"):
+            lixo = Plastico(quantidade)
+
+        elif tipo.lower() == "vidro":
+            lixo = Vidro(quantidade)
+
+        elif tipo.lower() == "metal":
+            lixo = Metal(quantidade)
+
+        elif tipo.lower() == "borracha":
+            lixo = Borracha(quantidade)
+
+        elif tipo.lower() == "organico":
+            lixo = Organico(quantidade)
+
+        elif tipo.lower() == "outros":
+            lixo = Outros(quantidade)
+
+        else:
+            self.__tela_coleta.mostra_mensagem("Tipo não encontrado!")
+            return
+
+        coleta.lixos.append(lixo)
+        self.__tela_coleta.mostra_mensagem("Lixo adicionado com sucesso!")
+
+    def mostrar_lixos(self):
+        codigo_coleta = self.__tela_coleta.busca_coleta()
+        coleta = self.buscar_coleta_por_codigo(codigo_coleta)
+
+        if coleta is None:
+            self.__tela_coleta.mostra_mensagem("Coleta não encontrada!")
+            return
+
+        if not coleta.lixos:
+            self.__tela_coleta.mostra_mensagem(
+                "Nenhum lixo registrado nessa coleta.")
+            return
+
+        for idx, lixo in enumerate(coleta.lixos, start=1):
+            self.__tela_coleta.mostra_mensagem(
+                f"{idx}. Tipo: {type(lixo).__name__}, Quantidade: {lixo.quantidade}"
+            )
+
+    def excluir_lixo(self):
+        codigo = self.__tela_coleta.pega_codigo_coleta()
+        coleta = self.buscar_coleta_por_codigo(codigo)
+
+        if coleta is None:
+            self.__tela_coleta.mostra_mensagem("Coleta não encontrada!")
+            return
+
+        if not coleta.lixos:
+            self.__tela_coleta.mostra_mensagem(
+                "Nenhum lixo cadastrado nesta coleta.")
+            return
+
+        for i, lixo in enumerate(coleta.lixos):
+            self.__tela_coleta.mostra_mensagem(
+                f"{i}: Tipo: {type(lixo).__name__}, Quantidade: {lixo.quantidade}")
+
+        indice = self.__tela_coleta.pega_indice_lixo()
+
+        if 0 <= indice < len(coleta.lixos):
+            removido = coleta.lixos.pop(indice)
+            self.__tela_coleta.mostra_mensagem(
+                f"{type(removido).__name__} removido com sucesso.")
+        else:
+            self.__tela_coleta.mostra_mensagem("Índice inválido.")
 
     def retomar(self):
         self.__controlador_sistema.abre_tela()
@@ -123,6 +199,9 @@ class ControladorColeta:
             3: self.altera_coleta,
             4: self.excluir_coleta,
             5: self.listar_coleta,
+            6: self.adicionar_lixo,
+            7: self.excluir_lixo,
+            8: self.mostrar_lixos,
             0: self.retomar
         }
 
