@@ -1,38 +1,59 @@
-class TelaRelatorio():
+class TelaSensor():
     def tela_opcoes(self):
-        print(" ======== Relatório ======== ")
-        print("1 - Relatório de Colaborador")
-        print("2 - Relatório de Ecobarreira")
-        print("3 - Relatório Melhor Colaborador")
-        print("4 - Relatório Melhor Barreira")
-        print("5 - Lixo total")
-        print("0 - Retornar")
+        print(" ======== Sensores ======== ")
+        print("Opções:")
+        print("1 - Cadastrar Sensor")
+        print("2 - Buscar Sensor por Código")
+        print("3 - Alterar Sensor")
+        print("4 - Exclui Sensor")
+        print("5 - Listar Sensores")
+        print("0 - Retomar")
 
         while True:
             try:
-                opcao = int(input("Escolha a opção: "))
+                opcao = int(input("Escolha a opção:"))
                 if opcao in [0, 1, 2, 3, 4, 5]:
                     return opcao
                 else:
                     print("Opção inválida. Tente novamente.")
             except ValueError:
-                print("Por favor, digite um valor válido.")
+                print("Por favor, digite um número válido.")
 
-    def pega_codigo_ecobarreira(self):
-        try:
-            codigo = int(input("Digite o código da ecobarreira: "))
-            return codigo
-        except ValueError:
-            print("Código inválido. Digite um número inteiro.")
+    def pega_dados_sensor(self):
+        print(" ======= Dados do Sensor ======== ")
+        while True:
+            codigo = input("Código")
+            if codigo.isdigit() and int(codigo) > 0:
+                codigo = int(codigo)
+                break
+            print("Código inválido")
 
-    def pega_cpf_colaborador(self):
-        cpf = input("Digite o CPF do colaborador (apenas números): ").strip()
+        tipo = input("Tipo do sensor: ").strip()
+        while not tipo:
+            print("Tipo não pode estar vazio!")
+            tipo = input("Tipo do sensor: ").strip()
 
-        if not cpf.isdigit() or len(cpf) != 11:
-            print("CPF inválido. Deve conter exatamente 11 dígitos numéricos.")
-            return self.pega_cpf_colaborador()
+        while True:
+            ativo_input = input("Está ativo? (True/False): ").lower().strip()
+            if ativo_input in ["true", "false"]:
+                ativo = ativo_input == "true"
+                break
+            print("Valor inválido, digite 'True' ou 'False'.")
 
-        return cpf
+        return {"codigo": codigo, "tipo": tipo, "ativo": ativo}
+
+    def mostra_sensor(self, dados_sensor):
+        print("Código: ", {dados_sensor["codigo"]})
+        print("Tipo: ", {dados_sensor["tipo"]})
+        print("Ativo:", {'Sim' if dados_sensor['ativo'] else 'Não'})
+        print("--------------\n")
+
+    def busca_sensor(self):
+        while True:
+            codigo = input("Código do sensor que deseja selecionar: ")
+            if codigo.isdigit() and int(codigo) > 0:
+                return int(codigo)
+            print("Código inválido. Digite apenas números")
 
     def mostra_mensagem(self, mensagem):
         print(mensagem)
