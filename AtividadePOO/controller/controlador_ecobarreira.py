@@ -6,7 +6,7 @@ if TYPE_CHECKING:
 
 
 class ControladorEcoBarreira:
-    def __init__(self, controlador_sistema: ControladorControladores):
+    def __init__(self, controlador_sistema: "ControladorControladores"):
         self.__ecobarreiras = []
         self.__controlador_sistema = controlador_sistema
         self.__tela_ecobarreira = TelaEcoBarreira()
@@ -36,17 +36,15 @@ class ControladorEcoBarreira:
         for ecobarreira in self.__ecobarreiras:
             if ecobarreira.codigo == codigo:
                 self.__tela_ecobarreira.mostra_mensagem(
-                    "A Ecobarreira foi selecionada!")
+                    "Ecobarreira selecionada!")
                 return ecobarreira
-
-        self.__tela_ecobarreira.mostra_mensagem(
-            "A Ecobarreira não foi encontrada!")
+        self.__tela_ecobarreira.mostra_mensagem("Ecobarreira não encontrada!")
         return None
 
     def altera_ecobarreira(self):
         self.listar_ecobarreiras()
-        codigo_ecobarreira = self.__tela_ecobarreira.busca_ecobarreira()
-        ecobarreira = self.buscar_ecobarreira_por_codigo(codigo_ecobarreira)
+        codigo = self.__tela_ecobarreira.busca_ecobarreira()
+        ecobarreira = self.buscar_ecobarreira_por_codigo(codigo)
 
         if ecobarreira is not None:
             novos_dados_ecobarreira = self.__tela_ecobarreira.pega_dados_ecobarreira()
@@ -63,95 +61,114 @@ class ControladorEcoBarreira:
             self.__tela_ecobarreira.mostra_mensagem(
                 "Atenção! essa ecobarreira não existe!")
 
-    def excluir_ecobarreira(self, codigo: int):
+    def excluir_ecobarreira(self):
         self.listar_ecobarreiras()
         codigo = self.__tela_ecobarreira.busca_ecobarreira()
         ecobarreira = self.buscar_ecobarreira_por_codigo(codigo)
-
-        if ecobarreira is not None:
+        if ecobarreira:
             self.__ecobarreiras.remove(ecobarreira)
-            self.listar_ecobarreiras()
             self.__tela_ecobarreira.mostra_mensagem(
-                "Ecobarreira excluida com sucesso!")
+                "Ecobarreira excluída com sucesso!")
         else:
             self.__tela_ecobarreira.mostra_mensagem(
-                "Atenção! Essa Ecobarreira não existe")
+                "Ecobarreira não encontrada!")
 
     def listar_ecobarreiras(self):
-        for ecobarreira in self.__ecobarreiras:
-            self.__tela_ecobarreira.mostra_mensagem({
-                "Código": ecobarreira.codigo,
-                "Cidade": ecobarreira.cidade,
-                "Cep": ecobarreira.cep,
-                "Rua": ecobarreira.rua,
-                "Complemento": ecobarreira.complemento,
-                "Estado": ecobarreira.estado,
-                "Sensores": ecobarreira.sensores
+        if not self.__ecobarreiras:
+            self.__tela_ecobarreira.mostra_mensagem(
+                "Nenhuma ecobarreira cadastrada.")
+        else:
+            for e in self.__ecobarreiras:
+                self.__tela_ecobarreira.mostra_ecobarreira({
+                    "codigo": e.codigo,
+                    "cidade": e.cidade,
+                    "cep": e.cep,
+                    "rua": e.rua,
+                    "complemento": e.complemento,
+                    "estado": e.estado,
+                    "sensores": [s.codigo for s in e.sensores]
+                })
+
+    def buscar_e_mostrar_ecobarreira(self):
+        codigo = self.__tela_ecobarreira.busca_ecobarreira()
+        ecobarreira = self.buscar_ecobarreira_por_codigo(codigo)
+        if ecobarreira:
+            self.__tela_ecobarreira.mostra_ecobarreira({
+                "codigo": ecobarreira.codigo,
+                "cidade": ecobarreira.cidade,
+                "cep": ecobarreira.cep,
+                "rua": ecobarreira.rua,
+                "complemento": ecobarreira.complemento,
+                "estado": ecobarreira.estado,
+                "sensores": ecobarreira.sensores
             })
+        else:
+            self.__tela_ecobarreira.mostra_mensagem(
+                "Ecobarreira não encontrada.")
 
     def adicionar_sensor(self):
         self.listar_ecobarreiras()
-        codigo_ecobarreira = self.__tela_ecobarreira.busca_ecobarreira()
-        ecobarreira = self.buscar_ecobarreira_por_codigo(codigo_ecobarreira)
+        codigo = self.__tela_ecobarreira.busca_ecobarreira()
+        ecobarreira = self.buscar_ecobarreira_por_codigo(codigo)
 
-        if ecobarreira is not None:
-            codigo_sensor = self.__tela_ecobarreira.pega_codigo_sensor()
+        if not ecobarreira:
+            self.__tela_ecobarreira.mostra_mensagem(
+                "Ecobarreira não encontrada!")
+            return
 
-            sensor = self.__controlador_sistema.controlador_sensor.\
-                buscar_sensor_por_codigo(codigo_sensor)
+        codigo_sensor = self.__tela_ecobarreira.pega_codigo_sensor()
+        sensor = self.__controlador_sistema.controlador_sensor.buscar_sensor_por_codigo(
+            codigo_sensor)
 
-            if sensor is None:
-                self.__tela_ecobarreira.mostra_mensagem(
-                    "Sensor não encontrado!")
-                return
+        if sensor is None:
+            self.__tela_ecobarreira.mostra_mensagem(
+                "Sensor não encontrado!")
+            return
 
-            if sensor in ecobarreira.sensores:
-                self.__tela_ecobarreira.mostra_mensagem(
-                    "Sensor já foi adicionado!")
-            else:
-                ecobarreira.sensores.append(sensor)
-                self.__tela_ecobarreira.mostra_mensagem(
-                    "Sensor adicionado à ecobarreira!")
+        if sensor in ecobarreira.sensores:
+            self.__tela_ecobarreira.mostra_mensagem(
+                "Sensor já foi adicionado!")
+        else:
+            ecobarreira.sensores.append(sensor)
+            self.__tela_ecobarreira.mostra_mensagem(
+                "Sensor adicionado à ecobarreira!")
 
     def excluir_sensor(self):
-        self.listar_ecobarreiras()
-        codigo_ecobarreira = self.__tela_ecobarreira.busca_ecobarreira()
-        ecobarreira = self.buscar_ecobarreira_por_codigo(codigo_ecobarreira)
-
-        if ecobarreira is not None:
-            codigo_sensor = self.__tela_ecobarreira.pega_codigo_sensor()
-
-            sensor = self.__controlador_sistema.controlador_sensor.\
-                buscar_sensor_por_codigo(codigo_sensor)
-
-            if sensor is None:
-                self.__tela_ecobarreira.mostra_mensagem(
-                    "Sensor não encontrado!")
-                return
-
-            if sensor not in ecobarreira.sensores:
-                self.__tela_ecobarreira.mostra_mensagem(
-                    "Esse Sensor não está na Ecobarreira")
-            else:
-                ecobarreira.sensores.remove(sensor)
-                self.__tela_ecobarreira.mostra_mensagem(
-                    "Sensor removido com sucesso!")
-
-    def checar_sensores(self):
         self.listar_ecobarreiras()
         codigo = self.__tela_ecobarreira.busca_ecobarreira()
         ecobarreira = self.buscar_ecobarreira_por_codigo(codigo)
 
-        if ecobarreira is not None:
-            if ecobarreira.sensores:
-                self.__tela_ecobarreira.mostra_mensagem(
-                    f"Sensores dessa barreira: {ecobarreira.sensores}"
-                )
-            else:
-                self.__tela_ecobarreira.mostra_mensagem(
-                    "Nenhum sensor nessa barreira.")
+        if not ecobarreira:
+            self.__tela_ecobarreira.mostra_mensagem(
+                "Ecobarreira não encontrada!")
+            return
+
+        codigo_sensor = self.__tela_ecobarreira.pega_codigo_sensor()
+        sensor = self.__controlador_sistema.controlador_sensor.buscar_sensor_por_codigo(
+            codigo_sensor)
+
+        if not sensor:
+            self.__tela_ecobarreira.mostra_mensagem("Sensor não encontrado!")
+        elif sensor not in ecobarreira.sensores:
+            self.__tela_ecobarreira.mostra_mensagem(
+                "Sensor não está na ecobarreira!")
         else:
-            print("Ecobarreira não encontrada!")
+            ecobarreira.sensores.remove(sensor)
+            self.__tela_ecobarreira.mostra_mensagem(
+                "Sensor removido com sucesso!")
+
+    def checar_sensores(self):
+        codigo = self.__tela_ecobarreira.busca_ecobarreira()
+        ecobarreira = self.buscar_ecobarreira_por_codigo(codigo)
+
+        if not ecobarreira:
+            self.__tela_ecobarreira.mostra_mensagem(
+                "Ecobarreira não encontrada!")
+        elif not ecobarreira.sensores:
+            self.__tela_ecobarreira.mostra_mensagem("Nenhum sensor associado.")
+        else:
+            lista = [s.codigo for s in ecobarreira.sensores]
+            self.__tela_ecobarreira.mostra_mensagem(f"Sensores: {lista}")
 
     def retomar(self):
         self.__controlador_sistema.abre_tela()
@@ -159,7 +176,7 @@ class ControladorEcoBarreira:
     def abre_tela(self):
         lista_opcoes = {
             1: self.cadastrar_ecobarreira,
-            2: self.buscar_ecobarreira_por_codigo,
+            2: self.buscar_e_mostrar_ecobarreira,
             3: self.altera_ecobarreira,
             4: self.excluir_ecobarreira,
             5: self.listar_ecobarreiras,
