@@ -57,8 +57,10 @@ class TelaColaborador():
             print("Complemento não pode estár vazio!")
             complemento = input("Complemento: ").strip()
 
-        estado = input("Estado: ").strip()
-        while not estado:
+        estado = input("Estado: (digite a sigla) ").strip().lower()
+        while True:
+            if len(estado) == 2 and estado.isalpha:
+                break
             print("Estado não pode estar vazio!")
             estado = input("Estado: ").strip()
 
