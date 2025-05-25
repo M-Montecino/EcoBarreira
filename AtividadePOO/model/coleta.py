@@ -1,28 +1,40 @@
-from model.endereco import Endereco
-from model.sensor import Sensor
+from datetime import datetime
+from model.ecobarreira import EcoBarreira
+from model.colaborador import Colaborador
+from model.lixo import Lixo
 
 
-class EcoBarreira(Endereco):
-    def __init__(self, codigo: int, cidade: str, cep: str, rua: str, complemento: str, estado: str):
-        super().__init__(cidade, cep, rua, complemento, estado)
-        self.__codigo = codigo
-        self.endereco = Endereco()
-        self.__sensores = []
-
-    @property
-    def codigo(self) -> int:
-        return self.__codigo
-
-    @codigo.setter
-    def codigo(self, codigo: int):
-        if isinstance(codigo, int):
-            self.__codigo = codigo
+class Coleta:
+    def __init__(self, id: int, data: datetime, ecobarreira: EcoBarreira, colaborador: Colaborador):
+        self.__id = id
+        self.__data = data
+        self.__ecobarreira = ecobarreira
+        self.__colaborador = colaborador
+        self.__lixos = []
 
     @property
-    def sensores(self) -> list:
-        return self.__sensores
+    def data(self) -> datetime:
+        return self.__data
 
-    @sensores.setter
-    def sensores(self, sensores: list):
-        if isinstance(sensores, list):
-            self.__sensores = sensores
+    @data.setter
+    def data(self, data: datetime):
+        if isinstance(data, datetime):
+            self.__data = data
+
+    @property
+    def ecobarreira(self) -> EcoBarreira:
+        return self.__ecobarreira
+
+    @ecobarreira.setter
+    def ecobarreira(self, ecobarreira: EcoBarreira):
+        if isinstance(ecobarreira, EcoBarreira):
+            self.__ecobarreira = ecobarreira
+
+    @property
+    def colaborador(self) -> Colaborador:
+        return self.__colaborador
+
+    @colaborador.setter
+    def colaborador(self, colaborador: Colaborador):
+        if isinstance(colaborador, Colaborador):
+            self.__colaborador = colaborador
