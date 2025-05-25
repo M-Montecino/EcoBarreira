@@ -36,10 +36,11 @@ class TelaEcoBarreira():
             print("Cidade não pode estar vazio!")
             cidade = input("Cidade: ").strip()
 
-        cep = input("Cep: ").strip()
-        while not cep:
-            print("Cep não pode estar vazio!")
-            cep = input("Cep: ").strip()
+        cep = input("Cep (apenas números): ").strip()
+
+        while not (cep.isdigit() and len(cep) == 8):
+            print("CEP inválido! Deve conter exatamente 8 dígitos numéricos.")
+            cep = input("Cep (apenas números): ").strip()
 
         rua = input("Rua: ").strip()
         while not rua:
