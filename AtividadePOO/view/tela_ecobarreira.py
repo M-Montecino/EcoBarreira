@@ -25,7 +25,7 @@ class TelaEcoBarreira():
     def pega_dados_ecobarreira(self):
         print(" ===== Dados da Ecobarreira =====")
         while True:
-            codigo = input("Código: ").strip()
+            codigo = input("Código: ")
             if codigo.isdigit() and int(codigo) > 0:
                 codigo = int(codigo)
                 break
@@ -51,8 +51,10 @@ class TelaEcoBarreira():
             print("Complemento não pode estár vazio!")
             complemento = input("Complemento: ").strip()
 
-        estado = input("Estado: ").strip()
-        while not estado:
+        estado = input("Estado: (digite a sigla) ").strip().lower()
+        while True:
+            if len(estado) == 2 and estado.isalpha:
+                break
             print("Estado não pode estar vazio!")
             estado = input("Estado: ").strip()
 
