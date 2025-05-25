@@ -22,7 +22,7 @@ class TelaSensor():
     def pega_dados_sensor(self):
         print(" ======= Dados do Sensor ======== ")
         while True:
-            codigo = input("Código").strip()
+            codigo = input("Código")
             if codigo.isdigit() and int(codigo) > 0:
                 codigo = int(codigo)
                 break
@@ -34,7 +34,7 @@ class TelaSensor():
             tipo = input("Tipo do sensor: ").strip()
 
         while True:
-            ativo_input = input("Está ativo? (True/False): ").strip().lower()
+            ativo_input = input("Está ativo? (True/False): ").lower().strip()
             if ativo_input in ["true", "false"]:
                 ativo = ativo_input == "true"
                 break
@@ -50,7 +50,7 @@ class TelaSensor():
 
     def busca_sensor(self):
         while True:
-            codigo = input("Código do sensor que deseja selecionar: ").strip()
+            codigo = input("Código do sensor que deseja selecionar: ")
             if codigo.isdigit() and int(codigo) > 0:
                 return int(codigo)
             print("Código inválido. Digite apenas números")
