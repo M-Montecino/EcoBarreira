@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 
 
 class ControladorColeta:
-    def __init__(self, controlador_sistema: ControladorControladores):
+    def __init__(self, controlador_sistema: "ControladorControladores"):
         self.__coletas = []
         self.__controlador_sistema = controlador_sistema
         self.__tela_coleta = TelaColeta()
@@ -58,7 +58,7 @@ class ControladorColeta:
         return None
 
     def altera_coleta(self):
-        self.listar_coletas()
+        self.listar_coleta()
         id_coleta = self.__tela_coleta.buscar_coleta()
         coleta = self.buscar_coleta_por_id(id_coleta)
 
@@ -87,19 +87,19 @@ class ControladorColeta:
             self.__tela_coleta.mostra_mensagem("Coleta não encontrada.")
 
     def excluir_coleta(self, id: int):
-        self.listar_coletas()
+        self.listar_coleta()
         id = self.__tela_coleta.buscar_coleta()
         coleta = self.buscar_coleta_por_id(id)
 
         if coleta is not None:
             self.__coletas.remove(coleta)
-            self.listar_coletas()
+            self.listar_coleta()
             self.__tela_coleta.mostra_mensagem("Coleta excluida com sucesso!")
         else:
             self.__tela_coleta.mostra_mensagem(
                 "Atenção! essa coleta não existe")
 
-    def listar_coletas(self):
+    def listar_coleta(self):
         for coleta in self.__coletas:
             self.__tela_coleta.mostra_coleta({
                 "ID": coleta.id,
