@@ -18,5 +18,21 @@ class TelaRelatorio():
             except ValueError:
                 print("Por favor, digite um valor válido.")
 
+    def pega_codigo_ecobarreira(self):
+        try:
+            codigo = int(input("Digite o código da ecobarreira: "))
+            return codigo
+        except ValueError:
+            print("Código inválido. Digite um número inteiro.")
+
+    def pega_cpf_colaborador(self):
+        cpf = input("Digite o CPF do colaborador (apenas números): ").strip()
+
+        if not cpf.isdigit() or len(cpf) != 11:
+            print("CPF inválido. Deve conter exatamente 11 dígitos numéricos.")
+            return self.pega_cpf_colaborador()
+
+        return cpf
+
     def mostra_mensagem(self, mensagem):
         print(mensagem)
