@@ -1,11 +1,12 @@
 from model.endereco import Endereco
 
 
-class Colaborador:
+class Colaborador(Endereco):
     def __init__(self, cpf: int, nome: str, cidade: str, cep: str, rua: str, complemento: str, estado: str):
+        super().__init__(cidade, cep, rua, complemento, estado)
         self.__cpf = cpf
         self.__nome = nome
-        self.endereco = Endereco(cidade, cep, rua, complemento, estado)
+        self.endereco = Endereco()
 
     @property
     def cpf(self) -> str:
