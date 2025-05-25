@@ -6,6 +6,7 @@ class TelaControlador:
         print("2 --- EcoBarreira")
         print("3 --- Coleta")
         print("4 --- Sensor")
+        print("5 --- Relatórios")
         print("0 --- Finalizar Sistema")
 
         try:
