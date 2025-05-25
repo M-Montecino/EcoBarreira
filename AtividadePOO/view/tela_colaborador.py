@@ -3,7 +3,7 @@ class TelaColaborador():
         print(" ======== Colaboradores ======== ")
         print("Opções:")
         print("1 - Cadastrar Colaborador")
-        print("2 - Buscar Coaborador por CPF")
+        print("2 - Buscar Colaborador por CPF")
         print("3 - Alterar  Informações do Colaborador")
         print("4 - Excluir Colaborador")
         print("5 - Listar Colaboradores")
@@ -42,10 +42,11 @@ class TelaColaborador():
             print("Cidade não pode estar vazio!")
             cidade = input("Cidade: ").strip()
 
-        cep = input("Cep: ").strip()
-        while not cep:
-            print("Cep não pode estar vazio!")
-            cep = input("Cep: ").strip()
+        cep = input("Cep (apenas números): ").strip()
+
+        while not (cep.isdigit() and len(cep) == 8):
+            print("CEP inválido! Deve conter exatamente 8 dígitos numéricos.")
+            cep = input("Cep (apenas números): ").strip()
 
         rua = input("Rua: ").strip()
         while not rua:
@@ -59,7 +60,7 @@ class TelaColaborador():
 
         estado = input("Estado: (digite a sigla) ").strip().lower()
         while True:
-            if len(estado) == 2 and estado.isalpha:
+            if len(estado) == 2 and estado.isalpha():
                 break
             print("Estado não pode estar vazio!")
             estado = input("Estado: ").strip()
@@ -87,9 +88,9 @@ class TelaColaborador():
         while True:
             cpf_input = input(
                 "CPF do colaborador que deseja selecionar: ").strip()
-            cpf_limpo = "".join(filter(str.isdigit, cpf_input))
-            if cpf_limpo.isdigit() and len(cpf_limpo) == 11:
-                return int(cpf_limpo)
+            cpf = "".join(filter(str.isdigit, cpf_input))
+            if cpf.isdigit() and len(cpf) == 11:
+                return int(cpf)
             print("CPF inválido. Digite novamente")
 
     def mostra_mensagem(self, mensagem):
