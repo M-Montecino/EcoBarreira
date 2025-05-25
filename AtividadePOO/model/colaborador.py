@@ -6,7 +6,7 @@ class Colaborador(Endereco):
         super().__init__(cidade, cep, rua, complemento, estado)
         self.__cpf = cpf
         self.__nome = nome
-        self.endereco = Endereco()
+        self.endereco = Endereco(cidade, cep, rua, complemento, estado)
 
     @property
     def cpf(self) -> str:
