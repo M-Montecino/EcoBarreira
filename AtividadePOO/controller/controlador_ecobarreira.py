@@ -35,10 +35,7 @@ class ControladorEcoBarreira:
     def buscar_ecobarreira_por_codigo(self, codigo: int):
         for ecobarreira in self.__ecobarreiras:
             if ecobarreira.codigo == codigo:
-                self.__tela_ecobarreira.mostra_mensagem(
-                    "Ecobarreira selecionada!")
                 return ecobarreira
-        self.__tela_ecobarreira.mostra_mensagem("Ecobarreira não encontrada!")
         return None
 
     def altera_ecobarreira(self):
@@ -198,3 +195,6 @@ class ControladorEcoBarreira:
             except Exception as e:
                 self.__tela_ecobarreira.mostra_mensagem(
                     f"Comando inesperado: {str(e)}")
+
+    def get_ecobarreiras(self):
+        return self.__ecobarreiras
