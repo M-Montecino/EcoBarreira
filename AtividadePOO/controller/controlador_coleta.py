@@ -120,7 +120,7 @@ class ControladorColeta:
         tipo = dados_lixo["tipo"]
         quantidade = dados_lixo["quantidade"]
 
-        coleta = self.buscar_coleta_por_codigo(codigo_coleta)
+        coleta = self.buscar_coleta_por_id(codigo_coleta)
         if coleta is None:
             self.__tela_coleta.mostra_mensagem("Coleta não encontrada!")
             return
