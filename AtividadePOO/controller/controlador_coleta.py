@@ -14,90 +14,82 @@ class ControladorColeta:
         self.__tela_coleta = TelaColeta()
 
     def cadastrar_coleta(self):
-        dados_coleta = self.__tela_coleta.pega_dados_coleta()
+        dados = self.__tela_coleta.pega_dados_coleta()
 
-        if self.buscar_coleta_por_id(dados_coleta["id"]):
-            self.__tela_coleta.mostra_mensagem("Essa coleta já existe.")
-            return
+        colaborador = self.__controlador_sistema.controlador_colaborador.buscar_colaborador_por_cpf(
+            dados["cpf_colaborador"]
+        )
+        ecobarreira = self.__controlador_sistema.controlador_ecobarreira.buscar_ecobarreira_por_codigo(
+            dados["codigo_ecobarreira"]
+        )
 
-        try:
-            data = datetime.strptime(dados_coleta["data"], "%d/%m/%Y")
-        except ValueError:
-            self.__tela_coleta.mostra_mensagem(
-                "Data inválida. Use o formato DD/MM/AAAA.")
-            return
-
-        colaborador = self.__controlador_sistema.controlador_colaborador.\
-            buscar_colaborador_por_cpf(dados_coleta["cpf_colaborador"])
-        if colaborador is None:
+        if not colaborador:
             self.__tela_coleta.mostra_mensagem("Colaborador não encontrado.")
             return
-
-        ecobarreira = self.__controlador_sistema.controlador_ecobarreira.\
-            buscar_ecobarreira_por_codigo(dados_coleta["codigo_ecobarreira"])
-        if ecobarreira is None:
+        if not ecobarreira:
             self.__tela_coleta.mostra_mensagem("Ecobarreira não encontrada.")
             return
 
-        nova_coleta = Coleta(
-            dados_coleta["id"],
-            data,
-            ecobarreira,
-            colaborador
+        nova = Coleta(
+            data=dados["data"],
+            quantidade=dados["quantidade"],
+            tipo=dados["tipo"],
+            colaborador=colaborador,
+            ecobarreira=ecobarreira
         )
-
-        self.__coletas.append(nova_coleta)
-        self.__tela_coleta.mostra_mensagem("Coleta registrada com sucesso!")
+        self.__coletas.append(nova)
+        self.__tela_coleta.mostra_mensagem(
+            "Nova coleta cadastrada com sucesso!")
 
     def buscar_coleta_por_id(self, id: int):
         for coleta in self.__coletas:
             if coleta.id == id:
-                self.__tela_coleta.mostra_mensagem("Coleta encontrada!")
                 return coleta
-        self.__tela_coleta.mostra_mensagem("Coleta não encontrada!")
         return None
 
     def altera_coleta(self):
         self.listar_coleta()
-        id_coleta = self.__tela_coleta.buscar_coleta()
+        id_coleta = self.__tela_coleta.busca_coleta()
         coleta = self.buscar_coleta_por_id(id_coleta)
 
         if coleta:
             dados_coleta = self.__tela_coleta.pega_dados_coleta()
 
-            colaborador = self.buscar_colaborador_por_cpf(
-                dados_coleta["cpf_colaborador"])
+            colaborador = self.__controlador_sistema.controlador_colaborador.buscar_colaborador_por_cpf(
+                dados_coleta["cpf_colaborador"]
+            )
             if not colaborador:
                 self.__tela_coleta.mostra_mensagem(
                     "Colaborador não encontrado.")
                 return
 
-            ecobarreira = self.buscar_ecobarreira_por_codigo(
-                dados_coleta["codigo_ecobarreira"])
+            ecobarreira = self.__controlador_sistema.controlador_ecobarreira.buscar_ecobarreira_por_codigo(
+                dados_coleta["barreira"]
+            )
             if not ecobarreira:
                 self.__tela_coleta.mostra_mensagem(
                     "Ecobarreira não encontrada.")
                 return
 
-            coleta.id = dados_coleta["id"]
             coleta.data = dados_coleta["data"]
+            coleta.quantidade = dados_coleta["quantidade"]
+            coleta.tipo = dados_coleta["tipo"]
+            coleta.colaborador = colaborador
             coleta.ecobarreira = ecobarreira
             self.__tela_coleta.mostra_mensagem("Coleta alterada com sucesso!")
         else:
             self.__tela_coleta.mostra_mensagem("Coleta não encontrada.")
 
-    def excluir_coleta(self, id: int):
+    def excluir_coleta(self, id=None):
         self.listar_coleta()
-        id = self.__tela_coleta.buscar_coleta()
+        id = self.__tela_coleta.busca_coleta()
         coleta = self.buscar_coleta_por_id(id)
 
-        if coleta is not None:
+        if coleta:
             self.__coletas.remove(coleta)
-            self.listar_coleta()
-            self.__tela_coleta.mostra_mensagem("Coleta excluida com sucesso!")
+            self.__tela_coleta.mostra_mensagem("Coleta excluída com sucesso!")
         else:
-            self.__tela_coleta.mostra_mensagem(
-                "Atenção! essa coleta não existe")
+            self.__tela_coleta.mostra_mensagem("Coleta não encontrada.")
 
     def listar_coleta(self):
         for coleta in self.__coletas:
@@ -105,13 +97,26 @@ class ControladorColeta:
                 "ID": coleta.id,
                 "Data": coleta.data,
                 "Colaborador": coleta.colaborador.nome,
-                "Barreira": coleta.eco_barreira.nome
+                "Barreira": coleta.ecobarreira.nome
             })
+
+    def buscar_e_mostrar_coleta(self):
+        id = self.__tela_coleta.busca_coleta()
+        coleta = self.buscar_coleta_por_id(id)
+        if coleta:
+            self.__tela_coleta.mostra_coleta({
+                "ID": coleta.id,
+                "Data": coleta.data,
+                "Colaborador": coleta.colaborador.nome,
+                "Barreira": coleta.ecobarreira.nome
+            })
+        else:
+            self.__tela_coleta.mostra_mensagem("Coleta não encontrada.")
 
     def adicionar_lixo(self):
         dados_lixo = self.__tela_coleta.pega_dados_lixo()
 
-        codigo_coleta = dados_lixo["codigo_coleta"]
+        codigo_coleta = dados_lixo["codigo"]
         tipo = dados_lixo["tipo"]
         quantidade = dados_lixo["quantidade"]
 
@@ -158,16 +163,16 @@ class ControladorColeta:
                 "Nenhum lixo registrado nessa coleta.")
             return
 
-        for idx, lixo in enumerate(coleta.lixos, start=1):
+        for i, lixo in enumerate(coleta.lixos, start=1):
+            tipo = lixo.__class__.__name__
             self.__tela_coleta.mostra_mensagem(
-                f"{idx}. Tipo: {type(lixo).__name__}, Quantidade: {lixo.quantidade}"
-            )
+                f"{i}) {tipo} - {lixo.quantidade} kg")
 
     def excluir_lixo(self):
-        codigo = self.__tela_coleta.pega_codigo_coleta()
-        coleta = self.buscar_coleta_por_codigo(codigo)
+        id = self.__tela_coleta.pega_codigo_coleta()
+        coleta = self.buscar_coleta_por_id(id)
 
-        if coleta is None:
+        if not coleta:
             self.__tela_coleta.mostra_mensagem("Coleta não encontrada!")
             return
 
@@ -176,18 +181,22 @@ class ControladorColeta:
                 "Nenhum lixo cadastrado nesta coleta.")
             return
 
-        for i, lixo in enumerate(coleta.lixos):
+        for i, lixo in enumerate(coleta.lixos, start=1):
+            tipo = lixo.__class__.__name__
             self.__tela_coleta.mostra_mensagem(
-                f"{i}: Tipo: {type(lixo).__name__}, Quantidade: {lixo.quantidade}")
+                f"{i}) {tipo} - {lixo.quantidade} kg")
 
         indice = self.__tela_coleta.pega_indice_lixo()
+        indice_real = indice - 1
 
-        if 0 <= indice < len(coleta.lixos):
-            removido = coleta.lixos.pop(indice)
+        if 0 <= indice_real < len(coleta.lixos):
+            removido = coleta.lixos.pop(indice_real)
+            tipo_removido = removido.__class__.__name__
             self.__tela_coleta.mostra_mensagem(
-                f"{type(removido).__name__} removido com sucesso.")
+                f"{tipo_removido} removido com sucesso.")
         else:
-            self.__tela_coleta.mostra_mensagem("Índice inválido.")
+            self.__tela_coleta.mostra_mensagem(
+                "Número inválido. Tente novamente.")
 
     def retomar(self):
         self.__controlador_sistema.abre_tela()
@@ -195,7 +204,7 @@ class ControladorColeta:
     def abre_tela(self):
         lista_opcoes = {
             1: self.cadastrar_coleta,
-            2: self.buscar_coleta_por_id,
+            2: self.buscar_e_mostrar_coleta,
             3: self.altera_coleta,
             4: self.excluir_coleta,
             5: self.listar_coleta,
@@ -217,3 +226,6 @@ class ControladorColeta:
             except Exception as e:
                 self.__tela_coleta.mostra_mensagem(
                     f"Comando inesperado: {str(e)}")
+
+    def get_coletas(self):
+        return self.__coletas
