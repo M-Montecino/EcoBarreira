@@ -38,13 +38,13 @@ class TelaColeta():
         cpf_colaborador = input("CPF do colaborador: ").strip()
         cpf_colaborador = ''.join(filter(str.isdigit, cpf_colaborador))
 
-        codigo_barreira = input("Código da ecobarreira: ")
-        codigo_barreira = ''.join(filter(str.isdigit, codigo_barreira))
+        codigo_ecobarreira = input("Código da ecobarreira: ")
+        codigo_ecobarreira = ''.join(filter(str.isdigit, codigo_ecobarreira))
 
         return {"id": id_coleta,
                 "data": data,
                 "cpf_colaborador": cpf_colaborador,
-                "codigo_barreira": codigo_barreira
+                "codigo_ecobarreira": codigo_ecobarreira
                 }
 
     def pega_dados_lixo(self):
