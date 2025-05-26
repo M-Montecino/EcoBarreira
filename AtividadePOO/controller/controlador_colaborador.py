@@ -39,10 +39,7 @@ class ControladorColaborador:
     def buscar_colaborador_por_cpf(self, cpf: int):
         for colaborador in self.__colaboradores:
             if colaborador.cpf == cpf:
-                self.__tela_colaborador.mostra_mensagem(
-                    "Colaborador encontrado!")
                 return colaborador
-        self.__tela_colaborador.mostra_mensagem("Colaborador não encontrado!")
         return None
 
     def alterar_colaborador(self):
@@ -77,10 +74,13 @@ class ControladorColaborador:
             self.__tela_colaborador.mostra_mensagem(
                 "Colaborador não encontrado.")
 
-    def buscar_e_mostrar_colaborador(self):
-        cpf = self.__tela_colaborador.busca_colaborador()
-        colaborador = self.buscar_colaborador_por_cpf(cpf)
-        if colaborador:
+    def listar_colaboradores(self):
+        if not self.__colaboradores:
+            self.__tela_colaborador.mostra_mensagem(
+                "Nenhum colaborador cadastrado.")
+            return
+
+        for colaborador in self.__colaboradores:
             self.__tela_colaborador.mostra_colaborador({
                 "cpf": colaborador.cpf,
                 "nome": colaborador.nome,
@@ -91,13 +91,10 @@ class ControladorColaborador:
                 "estado": colaborador.estado
             })
 
-    def listar_colaboradores(self):
-        if not self.__colaboradores:
-            self.__tela_colaborador.mostra_mensagem(
-                "Nenhum colaborador cadastrado.")
-            return
-
-        for colaborador in self.__colaboradores:
+    def buscar_e_mostrar_colaborador(self):
+        cpf = self.__tela_colaborador.busca_colaborador()
+        colaborador = self.buscar_colaborador_por_cpf(cpf)
+        if colaborador:
             self.__tela_colaborador.mostra_colaborador({
                 "cpf": colaborador.cpf,
                 "nome": colaborador.nome,
@@ -133,3 +130,6 @@ class ControladorColaborador:
             except Exception as e:
                 self.__tela_colaborador.mostra_mensagem(
                     f"Comando inesperado: {str(e)}")
+
+    def get_colaboradores(self):
+        return self.__colaboradores
