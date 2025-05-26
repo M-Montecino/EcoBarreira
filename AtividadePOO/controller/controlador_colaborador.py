@@ -47,18 +47,20 @@ class ControladorColaborador:
         colaborador = self.buscar_colaborador_por_cpf(cpf)
         if colaborador:
             novos_dados = self.__tela_colaborador.pega_dados_colaborador()
-            colaborador.cpf = novos_dados["cpf"]
+            if novos_dados["cpf"] != cpf:
+                self.__tela_colaborador.mostra_mensagem(
+                    "Não é permitido alterar o CPF de um colaborador.")
+                return
+
             colaborador.nome = novos_dados["nome"]
             colaborador.cidade = novos_dados["cidade"]
             colaborador.cep = novos_dados["cep"]
             colaborador.rua = novos_dados["rua"]
             colaborador.complemento = novos_dados["complemento"]
             colaborador.estado = novos_dados["estado"]
-            self.__tela_colaborador.mostra_mensagem(
-                "Dados atualizados com sucesso!")
+            self.__tela_colaborador.mostra_mensagem("Dados atualizados com sucesso!")
         else:
-            self.__tela_colaborador.mostra_mensagem(
-                "Colaborador não encontrado.")
+            self.__tela_colaborador.mostra_mensagem("Colaborador não encontrado.")
 
     def excluir_colaborador(self):
         cpf = self.__tela_colaborador.busca_colaborador()
