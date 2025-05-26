@@ -67,7 +67,7 @@ class TelaEcoBarreira():
                 "estado": estado
                 }
 
-    def pega_codigo_sensor():
+    def pega_codigo_sensor(self):
         while True:
             codigo_sensor = input("Digite o código do sensor: ")
             if codigo_sensor.isdigit():
