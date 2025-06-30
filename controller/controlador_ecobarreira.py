@@ -105,20 +105,21 @@ class ControladorEcoBarreira:
             ecobarreiras = self.__ecobarreira_dao.pega_todos()
             if not ecobarreiras:
                 self.__tela_ecobarreira.mostra_mensagem("Nenhuma ecobarreira cadastrada.")
-                
+                return
+
             lista_dados = []
             for e in ecobarreiras:
-                    lista_dados = {
-                        "codigo": e.codigo,
-                        "cidade": e.cidade,
-                        "cep": e.cep,
-                        "rua": e.rua,
-                        "complemento": e.complemento,
-                        "estado": e.estado,
-                        "sensores": [s.codigo for s in e.sensores]
-                    }
+                lista_dados.append({
+                    "codigo": e.codigo,
+                    "cidade": e.cidade,
+                    "cep": e.cep,
+                    "rua": e.rua,
+                    "complemento": e.complemento,
+                    "estado": e.estado,
+                    "sensores": [s.codigo for s in e.sensores]
+                })
 
-            self.__tela_ecobarreira.mostra_ecobarreira(lista_dados)
+            self.__tela_ecobarreira.mostra_ecobarreiras(lista_dados)
 
         except Exception as e:
             self.__tela_ecobarreira.mostra_mensagem(f"Erro ao listar ecobarreiras: {str(e)}")

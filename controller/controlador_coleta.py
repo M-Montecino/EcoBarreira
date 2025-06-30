@@ -130,24 +130,27 @@ class ControladorColeta:
     def listar_coleta(self):
         try:
             coletas = self.__coleta_dao.pega_todos()
+
             if not coletas:
                 self.__tela_coleta.mostra_mensagem("Nenhuma coleta cadastrada.")
                 return
             
             lista_dados = []
             for coleta in coletas:
-                lista_dados.append({
-                "id": coleta.id,
-                "data": coleta.data,
-                "colaborador": coleta.colaborador.cpf,
-                "ecobarreira": coleta.ecobarreira.codigo
-            })
+                data_str = coleta.data.strftime("%d/%m/%Y") if hasattr(coleta.data, 'strftime') else str(coleta.data)
                 
-            self.__tela_coleta.mostra_mensagem(lista_dados)
+                lista_dados.append({
+                    "id": coleta.id,
+                    "data": data_str,
+                    "colaborador": coleta.colaborador.cpf,
+                    "ecobarreira": coleta.ecobarreira.codigo
+                })
+
+            self.__tela_coleta.mostra_coletas(lista_dados)
 
         except Exception as e:
-            self.__tela_coleta.mostra_mensagem(f"Erro ao listar colaboradores: {str(e)}")
-
+            self.__tela_coleta.mostra_mensagem(f"Erro ao listar coletas: {str(e)}")
+    
     def buscar_e_mostrar_coleta(self):
         try:
             id = self.__tela_coleta.busca_coleta()

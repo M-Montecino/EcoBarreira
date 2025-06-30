@@ -110,7 +110,7 @@ class TelaColeta():
             f"id: {coleta['id']}\n"
             f"Data: {coleta['data']}\n"
             f"Colaborador: {coleta['colaborador']}\n"
-            f"Ecobarreira: {coleta['ecobarreira']}\n"   
+            f"Ecobarreira: {coleta['ecobarreira']}\n\n"   
         )
         sg.popup("Lista de Coletas", string_todas_coletas)
 
