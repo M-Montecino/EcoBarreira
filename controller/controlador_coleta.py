@@ -41,8 +41,8 @@ class ControladorColeta:
             nova = Coleta(
                 id=id_coleta,
                 data=dados["data"],
-                colaborador=dados["cpf_colaborador"],
-                ecobarreira=dados["codigo_ecobarreira"]
+                colaborador=colaborador,
+                ecobarreira=ecobarreira
             )
 
             for coleta in self.__coleta_dao.pega_todos():
@@ -129,7 +129,7 @@ class ControladorColeta:
 
     def listar_coleta(self):
         try:
-            coletas = self.__coleta_dao.pega_todos
+            coletas = self.__coleta_dao.pega_todos()
             if not coletas:
                 self.__tela_coleta.mostra_mensagem("Nenhuma coleta cadastrada.")
                 return
@@ -160,7 +160,7 @@ class ControladorColeta:
                 "id": coleta.id,
                 "data": coleta.data,
                 "colaborador": coleta.colaborador.cpf,
-                "barreira": coleta.ecobarreira.codigo
+                "ecobarreira": coleta.ecobarreira.codigo
             }
 
             self.__tela_coleta.mostra_coleta(dados)
