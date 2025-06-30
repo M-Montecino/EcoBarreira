@@ -43,7 +43,7 @@ class ControladorColaborador:
             self.__tela_colaborador.mostra_mensagem(str(e))
         except Exception as e:
             self.__tela_colaborador.mostra_mensagem(f"Erro inesperado: {str(e)}")
-    
+
     def buscar_colaborador_por_cpf(self, cpf_input: int):
         try:
             cpf = int(cpf_input)
@@ -70,13 +70,11 @@ class ControladorColaborador:
 
             colaborador.cpf = novos_dados["cpf"]
             colaborador.nome = novos_dados["nome"]
-            colaborador.endereco = (
-                novos_dados["cidade"],
-                novos_dados["cep"],
-                novos_dados["rua"],
-                novos_dados["complemento"],
-                novos_dados["estado"]
-            )
+            colaborador.cidade = novos_dados["cidade"]
+            colaborador.cep = novos_dados["cep"]
+            colaborador.rua = novos_dados["rua"]
+            colaborador.complemento = novos_dados["complemento"]
+            colaborador.estado = novos_dados["estado"]
 
             self.__colaborador_dao.remove(cpf_antigo)
             self.__colaborador_dao.adiciona(colaborador)
