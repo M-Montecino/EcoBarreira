@@ -77,14 +77,23 @@ class TelaSensor():
             except Exception as e:
                 sg.Popup("Erro de entrada", f"Dados inválidos: {str(e)}", title="Erro")
 
-    def mostra_sensor(self, dados_sensor):
-        string_todos_sensores = ""
-        for dado in dados_sensor:
-            string_todos_sensores = string_todos_sensores + "CÓDIGO DO SENSOR: " + str(dado["codigo"]) + "\n"
-            string_todos_sensores = string_todos_sensores + "TIPO DE SENSOR: " + dado["tipo"] + "\n"
-            string_todos_sensores = string_todos_sensores + "ESTÁ ATIVO?: " + str(dado["ativo"]) + "\n\n"
+    def mostra_sensor(self, dados_sensor: dict):
+        string = (
+            f"Codigo: {dados_sensor['codigo']}\n"
+            f"Tipo: {dados_sensor['tipo']}\n"
+            f"Ativo: {dados_sensor['ativo']}\n"
+        )
+        sg.popup("Sensor encontrado: ", string)
 
-            sg.Popup(" --------- Lista de Sensores --------- ", string_todos_sensores)
+    def mostra_sensores(self, lista_dados_sensores: list[dict]):
+        string_todos_sensores = ""
+        for sensor in lista_dados_sensores:
+            string_todos_sensores += (
+            f"Codigo: {sensor['codigo']}\n"
+            f"Tipo: {sensor['tipo']}\n"
+            f"Ativo: {sensor['ativo']}\n"
+            )
+        sg.popup("Lista de sensores", string_todos_sensores)
 
     def busca_sensor(self):
         sg.ChangeLookAndFeel("Green")

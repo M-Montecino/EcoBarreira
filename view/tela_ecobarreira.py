@@ -49,7 +49,7 @@ class TelaEcoBarreira():
 
         while True:
             layout = [
-                [sg.Text(' ======= Dados do Colaborador ======== ',
+                [sg.Text(' ======= Dados da Ecobarreira ======== ',
                          font=("Arial", 25))],
                 [sg.Text('Codigo: ', size=(15, 1)), sg.InputText('', key='codigo')],
                 [sg.Text('Cidade:', size=(15, 1)),
@@ -105,17 +105,29 @@ class TelaEcoBarreira():
                 sg.Popup(
                     "Erro", f"Dados inválidos: {str(e)}", title="Erro de validação")
 
-    def mostra_ecobarreira(self, dados_ecobarreira):
+    def mostra_ecobarreira(self, dados_ecobarreira: dict):
+        string = (
+            f"Código: {dados_ecobarreira['nome']}\n"
+            f"Cidade: {dados_ecobarreira['cidade']}\n"
+            f"Cep: {dados_ecobarreira['cep']}\n"
+            f"Rua: {dados_ecobarreira['rua']}\n"
+            f"Complemento: {dados_ecobarreira['complemento']}\n"
+            f"Estado: {dados_ecobarreira['estado']}\n"
+        )
+        sg.popup("Ecobarreira encontrada:", string)
+    
+    def mostra_ecobarreiras(self, lista_dados_ecobarreira: list[dict]):
         string_todas_ecobarreiras = ""
-        for dado in dados_ecobarreira:
-            string_todas_ecobarreiras = string_todas_ecobarreiras + "Código: " + str(dado["codigo"]) + "\n"
-            string_todas_ecobarreiras = string_todas_ecobarreiras + "Cidade: " + dado["cidade"] + "\n"
-            string_todas_ecobarreiras = string_todas_ecobarreiras + "Cep: " + dado["cep"] + "\n"
-            string_todas_ecobarreiras = string_todas_ecobarreiras + "Rua: " + dado["rua"] + "\n"
-            string_todas_ecobarreiras = string_todas_ecobarreiras + "Complemento: " + dado["complemento"] + "\n"
-            string_todas_ecobarreiras = string_todas_ecobarreiras + "Estado: " + dado["estado"] + "\n\n"
-
-            sg.Popup(" --------- Lista de Ecobarreiras --------- ", string_todas_ecobarreiras)
+        for ecobarreira in lista_dados_ecobarreira:
+            string_todas_ecobarreiras += (
+                f"Nome: {ecobarreira['nome']}\n"
+                f"Cidade: {ecobarreira['cidade']}\n"
+                f"Cep: {ecobarreira['cep']}\n"
+                f"Rua: {ecobarreira['rua']}\n"
+                f"Complemento: {ecobarreira['complemento']}\n"
+                f"Estado: {ecobarreira['estado']}\n\n"
+            )
+        sg.popup("Lista de Ecobarreiras", string_todas_ecobarreiras)
 
     def busca_ecobarreira(self):
         sg.ChangeLookAndFeel("Green")

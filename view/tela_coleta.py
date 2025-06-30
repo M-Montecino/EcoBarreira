@@ -94,16 +94,26 @@ class TelaColeta():
             except ValueError as e:
                 sg.Popup("Erro", f"Dados inválidos: {str(e)}", title="Erro de validação")
 
-    def mostra_coleta(self, dados_coleta):
-        string_todas_coletas = ''
-        for dado in dados_coleta:
-            string_todas_coletas = string_todas_coletas + "Id: " + str(dado["id"]) + "\n"
-            string_todas_coletas = string_todas_coletas + "Data: " + str(dado["data"]) + "\n"
-            string_todas_coletas = string_todas_coletas + "Código da Ecobarreira: " + str(dado["ecobarreira"]) + "\n"
-            string_todas_coletas = string_todas_coletas + "CPF do Colaborador: " + str(dado["colaborador"]) + "\n\n"
-
-            sg.Popup(" --------- Lista de Coletas --------- ", string_todas_coletas)
+    def mostra_coleta(self, dados_coleta: dict):
+        string = (
+            f"id: {dados_coleta['id']}\n"
+            f"Data: {dados_coleta['data']}\n"
+            f"Colaborador: {dados_coleta['colaborador']}\n"
+            f"Ecobarreira: {dados_coleta['ecobarreira']}\n"
+        )
+        sg.popup("Coleta encontrada:", string)
         
+    def mostra_coletas(self, lista_dados_coletas: list[dict]):
+        string_todas_coletas = ""
+        for coleta in lista_dados_coletas:
+            string_todas_coletas += (
+            f"id: {coleta['id']}\n"
+            f"Data: {coleta['data']}\n"
+            f"Colaborador: {coleta['colaborador']}\n"
+            f"Ecobarreira: {coleta['ecobarreira']}\n"   
+        )
+        sg.popup("Lista de Coletas", string_todas_coletas)
+
     def busca_coleta(self):
         sg.ChangeLookAndFeel("Green")
         layout = [
