@@ -204,6 +204,7 @@ class ControladorColeta:
 
         lixo = classe_lixo(quantidade)
         coleta.adicionar_lixo(lixo)
+        self.__coleta_dao.altera(coleta)
 
         self.__tela_coleta.mostra_mensagem("Lixo adicionado com sucesso!")
 
@@ -258,6 +259,8 @@ class ControladorColeta:
 
             if 0 <= indice_real < len(coleta.lixos):
                 removido = coleta.lixos.pop(indice_real)
+                coleta.remover_lixo(removido)
+                self.__coleta_dao.altera(coleta)
                 tipo_removido = removido.__class__.__name__
                 self.__tela_coleta.mostra_mensagem(f"{tipo_removido} removido com sucesso.")
             else:
