@@ -268,6 +268,9 @@ class ControladorColeta:
         except Exception as e:
             self.__tela_coleta.mostra_mensagem(f"Erro inesperado: {str(e)}")
 
+    def get_coletas(self) -> list[Coleta]:
+        return self.__coleta_dao.pega_todos()
+
     def retomar(self):
         self.__controlador_sistema.abre_tela()
 

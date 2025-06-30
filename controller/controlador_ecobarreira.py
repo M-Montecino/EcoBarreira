@@ -211,6 +211,9 @@ class ControladorEcoBarreira:
         lista = [{"codigo": s.codigo, "tipo": s.tipo, "ativo": s.ativo} for s in ecobarreira.sensores]
         self.__tela_ecobarreira.mostra_lista_sensores(lista)
 
+    def get_ecobarreiras(self):
+        return self.__ecobarreira_dao.pega_todos()
+
     def retomar(self):
         self.__controlador_sistema.abre_tela()
 

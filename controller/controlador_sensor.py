@@ -136,6 +136,9 @@ class ControladorSensor():
         except Exception as e:
             self.__tela_sensor.mostra_mensagem(f"Erro ao buscar sensor: {str(e)}")
 
+    def get_sensores(self):
+        return self.__sensore_dao.pega_todos()
+
     def retomar(self):
         self.__controlador_sistema.abre_tela()
 

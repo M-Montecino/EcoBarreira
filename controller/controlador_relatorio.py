@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from controller.controlador_controladores import ControladorControladores
 
-
 class ControladorRelatorio:
     def __init__(self, controlador_sistema: "ControladorControladores"):
         self.__controlador_sistema = controlador_sistema
@@ -13,101 +12,80 @@ class ControladorRelatorio:
 
     def relatorio_colaborador(self):
         cpf = self.__tela_relatorio.pega_cpf_colaborador()
-        colaborador = self.__controlador_sistema.controlador_colaborador.buscar_colaborador_por_cpf(
-            cpf)
+        colaborador = self.__controlador_sistema.controlador_colaborador.buscar_colaborador_por_cpf(cpf)
         coletas = self.__controlador_sistema.controlador_coleta.get_coletas()
 
         if not colaborador:
-            self.__tela_relatorio.mostra_mensagem(
-                "Colaborador não encontrado.")
+            self.__tela_relatorio.mostra_mensagem("Colaborador não encontrado.")
             return
 
-        total = self.__relatorio.relatorio_colaborador(colaborador, coletas)
-        self.__tela_relatorio.mostra_mensagem(
-            f"{colaborador.nome} coletou {total} kg de lixo.")
+        dados = self.__relatorio.gerar_relatorio_colaborador(colaborador, coletas)
+        msg = (
+            f"Nome: {dados['nome']}\n"
+            f"CPF: {dados['cpf']}\n"
+            f"Total de coletas: {dados['total_coletas']}\n"
+            f"Total de lixo coletado: {dados['total_lixo']} kg"
+        )
+        self.__tela_relatorio.mostra_mensagem(msg)
 
     def relatorio_ecobarreira(self):
         codigo = self.__tela_relatorio.pega_codigo_ecobarreira()
-        ecobarreira = self.__controlador_sistema.controlador_ecobarreira.buscar_ecobarreira_por_codigo(
-            codigo)
+        ecobarreira = self.__controlador_sistema.controlador_ecobarreira.buscar_ecobarreira_por_codigo(codigo)
+        coletas = self.__controlador_sistema.controlador_coleta.get_coletas()
 
         if not ecobarreira:
-            self.__tela_relatorio.mostra_mensagem(
-                "Ecobarreira não encontrada.")
+            self.__tela_relatorio.mostra_mensagem("Ecobarreira não encontrada.")
             return
 
-        coletas = [
-            coleta for coleta in self.__controlador_sistema.controlador_coleta.lista_coletas
-            if coleta.ecobarreira.codigo == codigo
-        ]
-
-        if not coletas:
-            self.__tela_relatorio.mostra_mensagem(
-                "Nenhuma coleta registrada para essa ecobarreira.")
-            return
-
-        for coleta in coletas:
-            total = sum(lixo.quantidade for lixo in coleta.lixos)
-            detalhes = [
-                {"Tipo": type(l).__name__, "Quantidade": l.quantidade} for l in coleta.lixos]
-            self.__tela_relatorio.mostra_mensagem({
-                "Colaborador": coleta.colaborador.nome,
-                "Código da Coleta": coleta.codigo,
-                "Total de lixo (kg)": total,
-                "Detalhes": detalhes
-            })
+        dados = self.__relatorio.gerar_relatorio_ecobarreira(ecobarreira, coletas)
+        msg = (
+            f"Cidade: {dados['cidade']}\n"
+            f"Código: {dados['codigo']}\n"
+            f"Total de coletas: {dados['total_coletas']}\n"
+            f"Total de lixo coletado: {dados['total_lixo']} kg"
+        )
+        self.__tela_relatorio.mostra_mensagem(msg)
 
     def exibir_melhor_colaborador(self):
         colaboradores = self.__controlador_sistema.controlador_colaborador.get_colaboradores()
         coletas = self.__controlador_sistema.controlador_coleta.get_coletas()
 
-        melhor = None
-        maior_total = 0
+        resultado = self.__relatorio.melhor_colaborador(colaboradores, coletas)
 
-        for colaborador in colaboradores:
-            total = sum(
-                sum(lixo.quantidade for lixo in coleta.lixos)
-                for coleta in coletas if coleta.colaborador == colaborador
+        if resultado:
+            msg = (
+                f"Melhor colaborador:\n"
+                f"Nome: {resultado['nome']}\n"
+                f"CPF: {resultado['cpf']}\n"
+                f"Total de lixo: {resultado['total_lixo']} kg"
             )
-            if total > maior_total:
-                maior_total = total
-                melhor = colaborador
-
-        if melhor:
-            self.__tela_relatorio.mostra_mensagem(
-                f"Melhor colaborador: {melhor.nome} - {maior_total} kg coletados.")
         else:
-            self.__tela_relatorio.mostra_mensagem(
-                "Nenhum colaborador encontrado.")
+            msg = "Nenhum colaborador encontrado."
+
+        self.__tela_relatorio.mostra_mensagem(msg)
 
     def exibir_melhor_ecobarreira(self):
         ecobarreiras = self.__controlador_sistema.controlador_ecobarreira.get_ecobarreiras()
         coletas = self.__controlador_sistema.controlador_coleta.get_coletas()
 
-        melhor = None
-        maior_total = 0
+        resultado = self.__relatorio.melhor_ecobarreira(ecobarreiras, coletas)
 
-        for ecobarreira in ecobarreiras:
-            total = sum(
-                sum(lixo.quantidade for lixo in coleta.lixos)
-                for coleta in coletas if coleta.ecobarreira == ecobarreira
+        if resultado:
+            msg = (
+                f"Melhor ecobarreira:\n"
+                f"Cidade: {resultado['cidade']}\n"
+                f"Código: {resultado['codigo']}\n"
+                f"Total de lixo: {resultado['total_lixo']} kg"
             )
-            if total > maior_total:
-                maior_total = total
-                melhor = ecobarreira
-
-        if melhor:
-            self.__tela_relatorio.mostra_mensagem(
-                f"Melhor ecobarreira: {melhor.cidade} - {maior_total} kg coletados.")
         else:
-            self.__tela_relatorio.mostra_mensagem(
-                "Nenhuma ecobarreira encontrada.")
+            msg = "Nenhuma ecobarreira encontrada."
+
+        self.__tela_relatorio.mostra_mensagem(msg)
 
     def lixo_total(self):
         coletas = self.__controlador_sistema.controlador_coleta.get_coletas()
         total = self.__relatorio.lixo_total(coletas)
-        self.__tela_relatorio.mostra_mensagem(
-            f"Lixo total coletado: {total} kg.")
+        self.__tela_relatorio.mostra_mensagem(f"Lixo total coletado: {total} kg.")
 
     def retomar(self):
         self.__controlador_sistema.abre_tela()
@@ -129,8 +107,6 @@ class ControladorRelatorio:
                 if funcao_escolhida:
                     funcao_escolhida()
                 else:
-                    self.__tela_relatorio.mostra_mensagem(
-                        "Opção inválida. Tente novamente")
+                    self.__tela_relatorio.mostra_mensagem("Opção inválida. Tente novamente.")
             except Exception as e:
-                self.__tela_relatorio.mostra_mensagem(
-                    f"Comando inesperado: {str(e)}")
+                self.__tela_relatorio.mostra_mensagem(f"Comando inesperado: {str(e)}")

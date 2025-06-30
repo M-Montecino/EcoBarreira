@@ -152,6 +152,9 @@ class ControladorColaborador:
         except Exception as e:
             self.__tela_colaborador.mostra_mensagem(f"Erro ao buscar colaborador: {str(e)}")
 
+    def get_colaboradores(self):
+        return self.__colaborador_dao.pega_todos()
+
     def retomar(self):
         self.__controlador_sistema.abre_tela()
 
