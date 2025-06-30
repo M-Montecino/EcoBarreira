@@ -86,7 +86,8 @@ class ControladorEcoBarreira:
 
     def excluir_ecobarreira(self):
         try:
-            codigo = self.__tela_ecobarreira.busca_ecobarreira()
+            codigo_input = self.__tela_ecobarreira.busca_ecobarreira()
+            codigo = int(codigo_input)
             ecobarreira = self.buscar_ecobarreira_por_codigo(codigo)
             
             if ecobarreira is None:
@@ -178,7 +179,8 @@ class ControladorEcoBarreira:
 
     def excluir_sensor(self):
         self.listar_ecobarreiras()
-        codigo = self.__tela_ecobarreira.busca_ecobarreira()
+        codigo_input = self.__tela_ecobarreira.busca_ecobarreira()
+        codigo = int(codigo_input)
         ecobarreira = self.buscar_ecobarreira_por_codigo(codigo)
 
         if not ecobarreira:
