@@ -91,7 +91,7 @@ class TelaSensor():
             string_todos_sensores += (
             f"Codigo: {sensor['codigo']}\n"
             f"Tipo: {sensor['tipo']}\n"
-            f"Ativo: {sensor['ativo']}\n"
+            f"Ativo: {sensor['ativo']}\n\n"
             )
         sg.popup("Lista de sensores", string_todos_sensores)
 

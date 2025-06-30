@@ -11,7 +11,7 @@ class Sensor:
     @codigo.setter
     def codigo(self, codigo: int):
         if isinstance(codigo, int):
-            return self.__codigo
+            self.__codigo = codigo
 
     @property
     def tipo(self) -> str:

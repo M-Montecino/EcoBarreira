@@ -21,7 +21,7 @@ class ControladorSensor():
             dados_sensor = self.__tela_sensor.pega_dados_sensor()
             if dados_sensor is None:
                 return
-            
+
             novo_sensor = Sensor(
                 dados_sensor["codigo"],
                 dados_sensor["tipo"],
@@ -31,7 +31,7 @@ class ControladorSensor():
             for sensor in self.__sensore_dao.pega_todos():
                 if sensor.codigo == novo_sensor.codigo:
                     raise ElementoRepetidoException()
-                
+
             self.__sensore_dao.adiciona(novo_sensor)
             self.__tela_sensor.mostra_mensagem("Sensor adicionado com sucesso!")
 
@@ -54,12 +54,12 @@ class ControladorSensor():
 
     def altera_sensor(self):
         try:
-            codigo = self.__tela_sensor.busca_sensor()
-            sensor = self.buscar_sensor_por_codigo(codigo)
+            codigo_input = self.__tela_sensor.busca_sensor()
+            sensor = self.buscar_sensor_por_codigo(codigo_input)
 
             if sensor is None:
                 raise ElementoNaoExisteException()
-            
+
             codigo_antigo = sensor.codigo
 
             novos_dados = self.__tela_sensor.pega_dados_sensor()
@@ -71,7 +71,7 @@ class ControladorSensor():
             self.__sensore_dao.remove(codigo_antigo)
             self.__sensore_dao.adiciona(sensor)
 
-            self.__tela_sensor.mostra_mensagem("Dados atualizados com sucesso!")
+            self.__tela_sensor.mostra_mensagem("Sensor alterado com sucesso!")
 
         except ElementoNaoExisteException as e:
             self.__tela_sensor.mostra_mensagem(str(e))
@@ -80,7 +80,8 @@ class ControladorSensor():
 
     def excluir_sensor(self):
         try:
-            codigo = self.__tela_sensor.busca_sensor()
+            codigo_input = self.__tela_sensor.busca_sensor()
+            codigo = int(codigo_input)
             sensor = self.buscar_sensor_por_codigo(codigo)
 
             if sensor is None:
@@ -119,16 +120,16 @@ class ControladorSensor():
             codigo = self.__tela_sensor.busca_sensor()
             sensor = self.buscar_sensor_por_codigo(codigo)
 
-            if sensor in None:
+            if sensor is None:
                 raise ElementoNaoExisteException()
-            
-            dados = ({
+
+            dados = {
                 "codigo": sensor.codigo,
                 "tipo": sensor.tipo,
-                "ativo": sensor.ativo
-            })
-            
-            self.__tela_sensor.mostra_mensagem(dados)
+                "ativo": "Sim" if sensor.ativo else "Não"
+            }
+
+            self.__tela_sensor.mostra_sensor(dados)
 
         except ElementoNaoExisteException as e:
             self.__tela_sensor.mostra_mensagem(str(e))
