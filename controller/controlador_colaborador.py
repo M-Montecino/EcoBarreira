@@ -88,7 +88,8 @@ class ControladorColaborador:
 
     def excluir_colaborador(self):
         try:
-            cpf = self.__tela_colaborador.busca_colaborador()
+            cpf_input = self.__tela_colaborador.busca_colaborador()
+            cpf = int(cpf_input)
             colaborador = self.buscar_colaborador_por_cpf(cpf)
 
             if colaborador is None:
