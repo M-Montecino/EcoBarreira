@@ -175,88 +175,98 @@ class ControladorColeta:
 
     def adicionar_lixo(self):
         dados_lixo = self.__tela_coleta.pega_dados_lixo()
+        if dados_lixo is None:
+            return
 
-        codigo_coleta = int(dados_lixo["id_coleta"])
-        tipo = dados_lixo["tipo_lixo"]
-        quantidade = float(dados_lixo["quantidade"])
-
-        coleta = self.buscar_coleta_por_id(codigo_coleta)
+        coleta = self.buscar_coleta_por_id(dados_lixo["id_coleta"])
         if coleta is None:
             self.__tela_coleta.mostra_mensagem("Coleta não encontrada!")
             return
 
-        if tipo.lower() in ("plastico", "plástico"):
-            lixo = Plastico(quantidade)
+        tipo = dados_lixo["tipo_lixo"].strip().lower()
+        quantidade = int(dados_lixo["quantidade"])
 
-        elif tipo.lower() == "vidro":
-            lixo = Vidro(quantidade)
+        tipos_validos = {
+            "plastico": Plastico,
+            "plástico": Plastico,
+            "vidro": Vidro,
+            "metal": Metal,
+            "borracha": Borracha,
+            "organico": Organico,
+            "orgânico": Organico,
+            "outros": Outros
+        }
 
-        elif tipo.lower() == "metal":
-            lixo = Metal(quantidade)
-
-        elif tipo.lower() == "borracha":
-            lixo = Borracha(quantidade)
-
-        elif tipo.lower() == "organico":
-            lixo = Organico(quantidade)
-
-        elif tipo.lower() == "outros":
-            lixo = Outros(quantidade)
-
-        else:
-            self.__tela_coleta.mostra_mensagem("Tipo não encontrado!")
+        classe_lixo = tipos_validos.get(tipo)
+        if not classe_lixo:
+            self.__tela_coleta.mostra_mensagem("Tipo de lixo inválido.")
             return
 
-        coleta.lixos.append(lixo)
+        lixo = classe_lixo(quantidade)
+        coleta.adicionar_lixo(lixo)
+
         self.__tela_coleta.mostra_mensagem("Lixo adicionado com sucesso!")
 
     def mostrar_lixos(self):
-        codigo_coleta = self.__tela_coleta.busca_coleta()
-        coleta = self.buscar_coleta_por_id(codigo_coleta)
+        try:
+            codigo_coleta = self.__tela_coleta.busca_coleta()
+            coleta = self.buscar_coleta_por_id(codigo_coleta)
 
-        if coleta is None:
-            self.__tela_coleta.mostra_mensagem("Coleta não encontrada!")
-            return
+            if coleta is None:
+                raise ElementoNaoExisteException("Coleta não encontrada!")
 
-        if not coleta.lixos:
-            self.__tela_coleta.mostra_mensagem(
-                "Nenhum lixo registrado nessa coleta.")
-            return
+            if not coleta.lixos:
+                self.__tela_coleta.mostra_mensagem("Nenhum lixo registrado nessa coleta.")
+                return
 
-        for i, lixo in enumerate(coleta.lixos, start=1):
-            tipo = lixo.__class__.__name__
-            self.__tela_coleta.mostra_mensagem(
-                f"{i}) {tipo} - {lixo.quantidade} kg")
+            lista_dados_lixos = []
+            for i, lixo in enumerate(coleta.lixos, start=1):
+                tipo = lixo.__class__.__name__
+                lista_dados_lixos.append(f"{i}) {tipo} - {lixo.quantidade} kg")
+
+            self.__tela_coleta.mostra_lista_lixos(lista_dados_lixos)
+
+        except ElementoNaoExisteException as e:
+            self.__tela_coleta.mostra_mensagem(str(e))
+        except Exception as e:
+            self.__tela_coleta.mostra_mensagem(f"Erro inesperado: {str(e)}")
 
     def excluir_lixo(self):
-        id = self.__tela_coleta.busca_coleta()
-        coleta = self.buscar_coleta_por_id(id)
+        try:
+            id = self.__tela_coleta.busca_coleta()
+            coleta = self.buscar_coleta_por_id(id)
 
-        if not coleta:
-            self.__tela_coleta.mostra_mensagem("Coleta não encontrada!")
-            return
+            if not coleta:
+                raise ElementoNaoExisteException("Coleta não encontrada!")
 
-        if not coleta.lixos:
-            self.__tela_coleta.mostra_mensagem(
-                "Nenhum lixo cadastrado nesta coleta.")
-            return
+            if not coleta.lixos:
+                self.__tela_coleta.mostra_mensagem("Nenhum lixo cadastrado nesta coleta.")
+                return
 
-        for i, lixo in enumerate(coleta.lixos, start=1):
-            tipo = lixo.__class__.__name__
-            self.__tela_coleta.mostra_mensagem(
-                f"{i}) {tipo} - {lixo.quantidade} kg")
+            lista_dados_lixos = []
+            for i, lixo in enumerate(coleta.lixos, start=1):
+                tipo = lixo.__class__.__name__
+                lista_dados_lixos.append(f"{i}) {tipo} - {lixo.quantidade} kg")
 
-        indice = self.__tela_coleta.pega_indice_lixo()
-        indice_real = indice - 1
+            self.__tela_coleta.mostra_lista_lixos(lista_dados_lixos)
 
-        if 0 <= indice_real < len(coleta.lixos):
-            removido = coleta.lixos.pop(indice_real)
-            tipo_removido = removido.__class__.__name__
-            self.__tela_coleta.mostra_mensagem(
-                f"{tipo_removido} removido com sucesso.")
-        else:
-            self.__tela_coleta.mostra_mensagem(
-                "Número inválido. Tente novamente.")
+            indice = self.__tela_coleta.pega_indice_lixo()
+            if indice is None:
+                return
+
+            indice_real = indice - 1
+
+            if 0 <= indice_real < len(coleta.lixos):
+                removido = coleta.lixos.pop(indice_real)
+                tipo_removido = removido.__class__.__name__
+                self.__tela_coleta.mostra_mensagem(f"{tipo_removido} removido com sucesso.")
+            else:
+                self.__tela_coleta.mostra_mensagem("Número inválido. Tente novamente.")
+
+        except ElementoNaoExisteException as e:
+            self.__tela_coleta.mostra_mensagem(str(e))
+        except Exception as e:
+            self.__tela_coleta.mostra_mensagem(f"Erro inesperado: {str(e)}")
 
     def retomar(self):
         self.__controlador_sistema.abre_tela()

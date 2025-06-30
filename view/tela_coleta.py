@@ -206,3 +206,7 @@ class TelaColeta():
                 return indice
             except ValueError:
                 sg.Popup("Erro", "Entrada inválida! Digite um número inteiro", title="Erro de validação")
+
+    def mostra_lista_lixos(self, lista_lixos: list[str]):
+        texto = "\n".join(lista_lixos)
+        sg.popup("Lixos da Coleta", texto)
