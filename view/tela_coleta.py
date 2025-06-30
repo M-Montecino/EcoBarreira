@@ -49,8 +49,8 @@ class TelaColeta():
             [sg.Text(' ======= Dados da Coleta ======== ', font=("Arial", 25))],
             [sg.Text('Id: ', size=(15, 1)), sg.InputText('', key='id')],
             [sg.Text('Data: ', size=(15, 1)), sg.InputText('', key='data')],
-            [sg.Text('Código da ecobarreira: ', size=(15, 1)), sg.InputText('', key='ecobarreira')],
-            [sg.Text('Cpf do colaborador: ', size=(15, 1)), sg.InputText('', key='colaborador')],
+            [sg.Text('Código da ecobarreira: ', size=(15, 1)), sg.InputText('', key='codigo_ecobarreira')],
+            [sg.Text('Cpf do colaborador: ', size=(15, 1)), sg.InputText('', key='cpf_colaborador')],
             [sg.Button('Confirmar'), sg.Cancel('Cancelar')]
             ]
             self.__window = sg.Window('CastorEco').Layout(layout)
@@ -63,21 +63,21 @@ class TelaColeta():
             
             id = values["id"]
             data = values["data"]
-            ecobarreira = values["ecobarreira"]
-            coleta = values["coleta"]
+            codigo_ecobarreira = values["codigo_ecobarreira"]
+            cpf_colaborador = values["cpf_colaborador"]
 
             try:
                 if not id.isdigit():
                     raise ValueError("Id são apenas números")
                 id = int(id)
 
-                if not ecobarreira.isdigit():
+                if not codigo_ecobarreira.isdigit():
                     raise ValueError("O código da Ecobarreira são apenas inteiros")
-                ecobarreira = int(ecobarreira)
+                codigo_ecobarreira = int(codigo_ecobarreira)
 
-                if not colaborador.isdigit() or len(colaborador) != 11:
+                if not cpf_colaborador.isdigit() or len(cpf_colaborador) != 11:
                     raise ValueError("CPF deve conter exatamente 11 dígitos")
-                colaborador = int(colaborador)
+                cpf_colaborador = int(cpf_colaborador)
 
                 try:
                     data = datetime.strptime(data, "%d/%m/%Y")
@@ -87,8 +87,8 @@ class TelaColeta():
                 return {
                     "id": id,
                     "data": data,
-                    "ecobarreira": ecobarreira,
-                    "colaborador": colaborador
+                    "codigo_ecobarreira": codigo_ecobarreira,
+                    "cpf_colaborador": cpf_colaborador
                 }
 
             except ValueError as e:

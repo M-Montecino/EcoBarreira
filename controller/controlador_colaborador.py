@@ -43,7 +43,7 @@ class ControladorColaborador:
             self.__tela_colaborador.mostra_mensagem(str(e))
         except Exception as e:
             self.__tela_colaborador.mostra_mensagem(f"Erro inesperado: {str(e)}")
-
+    
     def buscar_colaborador_por_cpf(self, cpf_input: int):
         try:
             cpf = int(cpf_input)

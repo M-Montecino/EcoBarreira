@@ -36,23 +36,29 @@ class ControladorColeta:
                 self.__tela_coleta.mostra_mensagem("Ecobarreira não encontrada.")
                 return
 
+            id_coleta = int(dados["id"])
+
             nova = Coleta(
-                id= dados["id"],
-                data= dados["data"],
-                colaborador= colaborador, 
-                ecobarreira= ecobarreira)
-            
+                id=id_coleta,
+                data=dados["data"],
+                colaborador=dados["cpf_colaborador"],
+                ecobarreira=dados["codigo_ecobarreira"]
+            )
+
             for coleta in self.__coleta_dao.pega_todos():
                 if coleta.id == nova.id:
                     raise ElementoRepetidoException()
-            
+
             self.__coleta_dao.adiciona(nova)
             self.__tela_coleta.mostra_mensagem("Coleta adicionada com sucesso!")
 
         except ElementoRepetidoException as e:
             self.__tela_coleta.mostra_mensagem(str(e))
         except Exception as e:
-            self.__tela_coleta.mostra_mensagem(f"Erro insesperado: {str(e)}")
+            import traceback
+            print("Erro completo:")
+            traceback.print_exc()
+            self.__tela_coleta.mostra_mensagem(f"Erro inesperado: {type(e).__name__}: {str(e)}")
 
     def buscar_coleta_por_id(self, id_input: int):
         try:

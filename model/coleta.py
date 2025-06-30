@@ -13,6 +13,15 @@ class Coleta:
         self.__lixos = []
 
     @property
+    def id(self) -> int:
+        return self.__id
+    
+    @id.setter
+    def id(self, id: int):
+        if isinstance(id, int):
+            self.__id = id
+
+    @property
     def data(self) -> datetime:
         return self.__data
 
