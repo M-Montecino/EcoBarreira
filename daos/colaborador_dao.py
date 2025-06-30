@@ -4,7 +4,7 @@ from model.colaborador import Colaborador
 
 class ColaboradorDAO(DAO):
     def __init__(self):
-        super().__init__('colaboradores.pkl')
+        super().__init__('colaboradores.pkl', chave="cpf")
 
     def adiciona(self, colaborador: Colaborador):
         if colaborador is not None and \

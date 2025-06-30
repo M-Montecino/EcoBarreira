@@ -107,7 +107,7 @@ class TelaEcoBarreira():
 
     def mostra_ecobarreira(self, dados_ecobarreira: dict):
         string = (
-            f"Código: {dados_ecobarreira['nome']}\n"
+            f"Código: {dados_ecobarreira['codigo']}\n"
             f"Cidade: {dados_ecobarreira['cidade']}\n"
             f"Cep: {dados_ecobarreira['cep']}\n"
             f"Rua: {dados_ecobarreira['rua']}\n"
@@ -120,7 +120,7 @@ class TelaEcoBarreira():
         string_todas_ecobarreiras = ""
         for ecobarreira in lista_dados_ecobarreira:
             string_todas_ecobarreiras += (
-                f"Nome: {ecobarreira['nome']}\n"
+                f"Codigo: {ecobarreira['codigo']}\n"
                 f"Cidade: {ecobarreira['cidade']}\n"
                 f"Cep: {ecobarreira['cep']}\n"
                 f"Rua: {ecobarreira['rua']}\n"

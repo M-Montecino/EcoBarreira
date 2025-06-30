@@ -98,7 +98,6 @@ class ControladorColaborador:
 
             self.__colaborador_dao.remove(cpf)
             self.__tela_colaborador.mostra_mensagem("Colaborador excluído com sucesso!")
-            self.listar_colaboradores()
 
         except ElementoNaoExisteException as e:
             self.__tela_colaborador.mostra_mensagem(str(e))

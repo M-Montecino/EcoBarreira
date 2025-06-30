@@ -94,7 +94,6 @@ class ControladorEcoBarreira:
             
             self.__ecobarreira_dao.remove(codigo)
             self.__tela_ecobarreira.mostra_mensagem("Ecobarreira excluida com sucesso!")
-            self.listar_ecobarreiras()
 
         except ElementoNaoExisteException as e:
             self.__tela_ecobarreira.mostra_mensagem(str(e))
@@ -103,21 +102,21 @@ class ControladorEcoBarreira:
 
     def listar_ecobarreiras(self):
         try:
-            ecobarreias = self.__ecobarreira_dao.pega_todos()
-            if not ecobarreias:
+            ecobarreiras = self.__ecobarreira_dao.pega_todos()
+            if not ecobarreiras:
                 self.__tela_ecobarreira.mostra_mensagem("Nenhuma ecobarreira cadastrada.")
                 
             lista_dados = []
-            for e in self.__ecobarreiras:
-                lista_dados.append({
-                    "codigo": e.codigo,
-                    "cidade": e.cidade,
-                    "cep": e.cep,
-                    "rua": e.rua,
-                    "complemento": e.complemento,
-                    "estado": e.estado,
-                    "sensores": [s.codigo for s in e.sensores]
-                })
+            for e in ecobarreiras:
+                    lista_dados = {
+                        "codigo": e.codigo,
+                        "cidade": e.cidade,
+                        "cep": e.cep,
+                        "rua": e.rua,
+                        "complemento": e.complemento,
+                        "estado": e.estado,
+                        "sensores": [s.codigo for s in e.sensores]
+                    }
 
             self.__tela_ecobarreira.mostra_ecobarreira(lista_dados)
 

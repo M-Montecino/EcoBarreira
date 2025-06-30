@@ -3,7 +3,7 @@ from model.coleta import Coleta
 
 class ColetaDAO(DAO):
     def __init__(self):
-        super().__init__('coletas.pkl')
+        super().__init__('coletas.pkl', chave="id")
     
     def adiciona(self, coleta: Coleta):
         if coleta is not None and \

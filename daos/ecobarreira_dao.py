@@ -5,7 +5,7 @@ from model.sensor import Sensor
 
 class EcobarreiraDAO(DAO):
     def __init__(self):
-        super().__init__('ecobarreiras.pkl')
+        super().__init__('ecobarreiras.pkl', chave="codigo")
 
     def adiciona(self, ecobarreira: EcoBarreira):
         if ecobarreira is not None and \

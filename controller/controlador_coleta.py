@@ -115,7 +115,6 @@ class ControladorColeta:
             
             self.__coleta_dao.remove(id)
             self.__tela_coleta.mostra_mensagem("Coleta excluida com sucesso!")
-            self.listar_coletas()
 
         except ElementoNaoExisteException as e:
             self.__tela_coleta.mostra_mensagem(str(e))
@@ -134,8 +133,8 @@ class ControladorColeta:
                 lista_dados.append({
                 "id": coleta.id,
                 "data": coleta.data,
-                "colaborador": coleta.colaborador.nome,
-                "ecobarreira": coleta.ecobarreira.nome
+                "colaborador": coleta.colaborador.cpf,
+                "ecobarreira": coleta.ecobarreira.codigo
             })
                 
             self.__tela_coleta.mostra_mensagem(lista_dados)
@@ -154,8 +153,8 @@ class ControladorColeta:
             dados = {
                 "id": coleta.id,
                 "data": coleta.data,
-                "colaborador": coleta.colaborador.nome,
-                "barreira": coleta.ecobarreira.nome
+                "colaborador": coleta.colaborador.cpf,
+                "barreira": coleta.ecobarreira.codigo
             }
 
             self.__tela_coleta.mostra_coleta(dados)
