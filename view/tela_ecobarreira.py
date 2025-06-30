@@ -178,3 +178,13 @@ class TelaEcoBarreira():
                 return codigo
             except ValueError:
                 sg.Popup("Erro", "Entrada inválida! Digite um número inteiro", title="Erro de validação")
+
+    def mostra_lista_sensores(self, lista_sensores: list[dict]):
+        texto = ""
+        for sensor in lista_sensores:
+            texto += (
+                f"Código: {sensor['codigo']}\n"
+                f"Tipo: {sensor['tipo']}\n"
+                f"Ativo: {sensor['ativo']}\n\n"
+            )
+        sg.popup("Sensores da ecobarreira", texto)
